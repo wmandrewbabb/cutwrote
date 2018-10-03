@@ -18,15 +18,17 @@ app.use(routes);
 // Socket.io
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const Sockets= require('./serverSockets.js');
+
+
 io.on('connection', function(socket){
-  console.log('a user connected with socket #' + socket.id);
-  socket.on('disconnect', function(){
-    console.log('User Disconnected');
-  });
-  socket.on('example_message', function(msg, msg2){
-    console.log('message: ' + msg + ' ' + msg2);
-  });
+
+  var clients= io.sockets.adapter;
+  var ioAccess= io.sockets
+  Sockets.initSockets(socket, clients, ioAccess);
+
 });
+
 io.listen(8000);
 
 // Connect to the Mongo DB

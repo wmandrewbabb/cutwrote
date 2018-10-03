@@ -3,9 +3,8 @@ import { Col, Row, Container } from "../../components/Grid";
 // import { Transition } from 'react-transition-group';
 // import anime from 'animejs';
 import openSocket from 'socket.io-client';
+
 const socket = openSocket('http://localhost:8000');
-
-
 
 class FrontInput extends Component {
     constructor(props) {
@@ -16,11 +15,19 @@ class FrontInput extends Component {
         };  
         //socketIO stuff
         this.sendSocketIO = this.sendSocketIO.bind(this);
+        this.createGame = this.createGame.bind(this);
+
       }
 
     sendSocketIO() {
         socket.emit('example_message', 'demo', 'second arg');
       }
+     
+    createGame() {
+        console.log(`player creating game`);
+        socket.emit('create', {name: 'player'});
+        
+    }      
   
       render() {
         return (
@@ -29,6 +36,7 @@ class FrontInput extends Component {
                 <Row>
                 <Col size="md-12">
                     <button onClick={this.sendSocketIO}>Send Socket.io</button>
+                    <button onClick={this.createGame}>Create Room</button>
                 </Col>
                 </Row>
             </Container>
