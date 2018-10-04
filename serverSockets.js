@@ -7,6 +7,8 @@ module.exports.initSockets = function(socket, clients, ioAccess){
     const gameRooms = {};
     const prompts = require('./prompts.js');
 
+    const promptLib = prompts.prompts;
+
     // for (x=0; x < prompts.prompts.length; x++) {
     //     console.log("prompts: " + prompts.prompts[x].prompt);
     // }
@@ -16,37 +18,14 @@ module.exports.initSockets = function(socket, clients, ioAccess){
         constructor(roomCode) {
             this.roomCode = roomCode;
             this.playerList = new PlayerList(roomCode);
-            // this.promptDeck = new Prompts([...prompts]);
+            this.prompts = new Prompts;
         }
         
         // adds a player to the room
-        addToRoom(name, id) {
-        this.playerList.players[id] = new Player(id, this.roomCode);
+        addToRoom(id) {
+            this.playerList.players[id] = new Player(id, this.roomCode);
         }
-    
-        // removes a player from the room
-        // long and complicated due to handling of edge cases
-        removeFromRoom(id) {
-        const { roomCode, playerList, playerSelections } = this;
-        const { players, pending } = playerList;
-    
-        // delete player from playerList and let other players know someone left
-        let departingPlayer = players[id].name;
-        console.log(`${departingPlayer} left room ${roomCode}`);
-        delete players[id];
-        io.sockets.in(roomCode).emit('update players', { players: playerList.prepareToSend(), departingPlayer })
-    
-        if(playerList.length < 3 ) { //&& <<<<roomStatus == waiting >>>> 
-            //things
-            } else {
-            // ...even if there are now enough players, still need to reset the game
-            }
-        }
-    
-        //once you've got three players, you can start
-        // startGame() {
 
-        // }
     }
 
     class Prompts {
@@ -59,9 +38,9 @@ module.exports.initSockets = function(socket, clients, ioAccess){
         shuffle(prompts) {
           let shuffledprompts = [];
       
-          for(let i = 0; i < prompts.length; i++) {
-            let randIndex = Math.floor(Math.random() * prompts.length);
-            shuffledprompts.push(prompts.splice(randIndex, 1)[0]);
+          for(let i = 0; i < promptLib.length; i++) {
+            let randIndex = Math.floor(Math.random() * promptLib.length);
+            shuffledprompts.push(promptLib.splice(randIndex, 1)[0]);
           };
       
           return shuffledprompts;
@@ -69,7 +48,7 @@ module.exports.initSockets = function(socket, clients, ioAccess){
       
         // getter so I only need to type 'whiteDeck.count' instead of 'whiteDeck.prompts.length'
         get count() {
-          return this.prompts.length;
+          return this.promptLib.length;
         }
 
       }
@@ -79,9 +58,7 @@ module.exports.initSockets = function(socket, clients, ioAccess){
         // both active and pending
         constructor(roomCode) {
             this.players = {};
-            this.pending = {};
             this.roomCode = roomCode;
-            this.cardCzarIndex = 0;
         }
 
         // getter so I only need to type 'playerList.length' instead of...well, just look at it VVVV
@@ -184,9 +161,11 @@ module.exports.initSockets = function(socket, clients, ioAccess){
   });
 
   // 'join' essentially does the same thing as 'create' as it relates to joining to a room
-  // has extra logic to prevent duplicate names or more than 10 players
   socket.on('join', (data) => {
+      
     let roomCode = data.roomCode.toUpperCase();
+    console.log("Getting a request to join room " + data.roomCode);
+    console.log(gameRooms[roomCode]);
 
     // if there is a room to join...(basically if they typed the right code)
     if (gameRooms[roomCode]) {
@@ -195,10 +174,12 @@ module.exports.initSockets = function(socket, clients, ioAccess){
         socket.emit('joined', {
             roomCode,
         });
+        console.log("User joined room: " + roomCode);
 
-      }  else {
+    } else {
       // no gameroom exists for that room code
       socket.emit('bad roomcode');
+      console.log("bad roomcode");
     }
   });
 

@@ -3,8 +3,11 @@ import { Col, Row, Container } from "../../components/Grid";
 // import { Transition } from 'react-transition-group';
 // import anime from 'animejs';
 import openSocket from 'socket.io-client';
+import JoinRoom from "../JoinRoom";
+import "./Frontinput.css";
 
-const socket = openSocket('http://localhost:8000');
+
+window.socket = openSocket('http://localhost:8000');
 
 class FrontInput extends Component {
     constructor(props) {
@@ -20,12 +23,12 @@ class FrontInput extends Component {
       }
 
     sendSocketIO() {
-        socket.emit('example_message', 'demo', 'second arg');
+        window.socket.emit('example_message', 'demo', 'second arg');
       }
      
     createGame() {
         console.log(`player creating game`);
-        socket.emit('create', {name: 'player'});
+        window.socket.emit('create', {name: 'player'});
         
     }      
   
@@ -35,8 +38,9 @@ class FrontInput extends Component {
             <Container className="h-100" fluid>
                 <Row>
                 <Col size="md-12">
-                    <button onClick={this.sendSocketIO}>Send Socket.io</button>
-                    <button onClick={this.createGame}>Create Room</button>
+                    {/* <button onClick={this.sendSocketIO}>Send Socket.io</button> */}
+                    <button className="createRoomButton" onClick={this.createGame}>Create Room</button>
+                    <JoinRoom />
                 </Col>
                 </Row>
             </Container>
