@@ -123,26 +123,24 @@ io.on('connection', function(socket){
       roomCode = roomCodeGen();
     }
 
-    console.log(`${data.name} has created a game, code ${roomCode}`);
+    console.log(`${socket.id} has created a game, code ${roomCode}`);
     
     // creates new GameRoom instance
     gameRooms[roomCode] = new GameRoom(roomCode);
 
     // joins the player to the GameRoom they created
     socket.join(roomCode);
-    gameRooms[roomCode].addToRoom(data.name, socket.id);
+    gameRooms[roomCode].addToRoom(socket.id);
 
     // updates the players playerList
     socket.emit('update players', {
       players: gameRooms[roomCode].playerList.prepareToSend(),
-      joiningPlayer: data.name,
     });
 
-    // gives the player their prompts
-    socket.emit('joined', {
-    //   prompts: [...gameRooms[roomCode].playerList.players[socket.id].prompts],
-      roomCode,
-    });
+    // // gives the player their prompts
+    // socket.emit('joined', {
+    //   roomCode,
+    // });
     
   });
 
@@ -156,16 +154,14 @@ io.on('connection', function(socket){
     if (gameRooms[roomCode]) {
 
         const { playerList} = gameRooms[roomCode];
-        const { players, pending, cardCzarIndex } = playerList;
+        // const { players, pending, cardCzarIndex } = playerList;
 
         socket.join(roomCode);
-        socket.emit('joined', {
-            roomCode,
-        });
+        gameRooms[roomCode].addToRoom(socket.id);
 
         io.sockets.in(roomCode).emit('update players', { 
           players: playerList.prepareToSend(), 
-          joiningPlayer: data.name 
+          // joiningPlayer: data.name 
         });
 
     } else {

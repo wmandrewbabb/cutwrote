@@ -21,16 +21,53 @@ class FrontInput extends Component {
         this.createGame = this.createGame.bind(this);
 
       }
+    componentDidMount() {
 
-    sendSocketIO() {
-        window.socket.emit('example_message', 'demo', 'second arg');
-      }
-     
-    createGame() {
-        console.log(`player creating game`);
-        window.socket.emit('create', {name: 'player'});
+        window.socket.connect();
+
+        window.socket.on('connected', (data) => {
+            console.log('connected');
+        })
+
+        window.socket.on('update players', (data) => {
+            console.log('updating player list');
+            this.setState({
+              players: data.players
+            })
+            console.log(data.players);
+        });
+      
+
+        window.socket.on('joined', (data) => {
+ 
+            this.setState((prevState) => {
+              let newCurrentScreen;
+              if (prevState.currentScreen === 'lobby') {
+                newCurrentScreen = 'game';
+              }
+              return {
+                cards: data.cards,
+                roomCode: data.roomCode ? data.roomCode : prevState.roomCode,
+                showModal: false,
+                currentScreen: newCurrentScreen || 'lobby',
+                joiningGame: false,
+              }
+            })
+          });
+
+
+
+    }
+
+            sendSocketIO() {
+            window.socket.emit('example_message', 'demo', 'second arg');
+        }
         
-    }      
+        createGame() {
+            console.log(`player creating game`);
+            window.socket.emit('create', {name: 'player'});
+            
+        }  
   
       render() {
         return (

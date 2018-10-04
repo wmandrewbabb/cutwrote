@@ -11,7 +11,7 @@ const App = () => (
       <Nav />
       <SplashTitle />
       <FrontInput />
-    <BackgroundBokke/>
+      <BackgroundBokke/>
 
   </div>
 );
