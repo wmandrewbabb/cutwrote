@@ -1,9 +1,20 @@
 const express = require("express");
+const logger = require('morgan');
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const routes = require("./routes");
 const app = express();
-const PORT = process.env.PORT || 3001;
+const server = require('http').createServer(app);
+
+app.use(logger('dev'));
+app.use(express.static(`${__dirname}/public`));
+
+const port = process.env.PORT || 3001;
+
+server.listen(port, function() {
+  console.log(`Cutwrote game listening on port: ${port}`);
+});
+
 
 // Define middleware here
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,17 +24,28 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 // Add routes, both API and view
-app.use(routes);
+// app.use(routes);
 
 // Socket.io
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const Sockets= require('./serverSockets.js');
+const io = require('socket.io')(server);
+// const Sockets= require('./serverSockets.js');
 
 const gameRooms = {};
 const prompts = require('./prompts.js');
-
 const promptLib = prompts.prompts;
+
+// io.listen();
+
+// Connect to the Mongo DB
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/reactreadinglist");
+
+// // Start the API server
+// app.listen(PORT, function() {
+//   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
+// });
+
+
 
     // for (x=0; x < prompts.prompts.length; x++) {
     //     console.log("prompts: " + prompts.prompts[x].prompt);
@@ -53,8 +75,7 @@ class Prompts {
 }
 
 class PlayerList {
-      // PlayerList handles all data and methods pertaining to the list of players,
-        // both active and pending
+  // PlayerList handles all data and methods pertaining to the list of players
   constructor(roomCode) {
     this.players = {};
     this.roomCode = roomCode;
@@ -86,19 +107,9 @@ class PlayerList {
             this.roomCode = roomCode;
             // this.score = [];
         }
-
-        // getter so I only need to type player.score instead of player.score.length
-        // get score() {
-        //     return this.score.length;
-        // }
     }
 
 io.on('connection', function(socket){
-
-  // var clients= io.sockets.adapter;
-  // var ioAccess= io.sockets
-  // Sockets.initSockets(socket, clients, ioAccess);
-  
 
 //THIS IS WHERE ALL OF OUR SOCKET EMITS ONS AND INS ARE
 
@@ -136,11 +147,6 @@ io.on('connection', function(socket){
     socket.emit('update players', {
       players: gameRooms[roomCode].playerList.prepareToSend(),
     });
-
-    // // gives the player their prompts
-    // socket.emit('joined', {
-    //   roomCode,
-    // });
     
   });
 
@@ -150,11 +156,10 @@ io.on('connection', function(socket){
     console.log("Getting a request to join room " + data.roomCode);
     console.log(gameRooms[roomCode]);
 
-    // if there is a room to join...(basically if they typed the right code)
+    // if there is a room to join...
     if (gameRooms[roomCode]) {
 
         const { playerList} = gameRooms[roomCode];
-        // const { players, pending, cardCzarIndex } = playerList;
 
         socket.join(roomCode);
         gameRooms[roomCode].addToRoom(socket.id);
@@ -172,7 +177,7 @@ io.on('connection', function(socket){
   });
 
   //Here's the function to create my roomcode
-    // generates a random 5-digit alphanumeric room code for players to join
+  // generates a random 5-digit alphanumeric room code for players to join
     function roomCodeGen() {
 
         let roomCode = '';
@@ -188,12 +193,3 @@ io.on('connection', function(socket){
 
 });
 
-io.listen(8000);
-
-// Connect to the Mongo DB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/reactreadinglist");
-
-// Start the API server
-app.listen(PORT, function() {
-  console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
-});

@@ -2,87 +2,60 @@ import React, { Component } from "react";
 import { Col, Row, Container } from "../../components/Grid";
 // import { Transition } from 'react-transition-group';
 // import anime from 'animejs';
-import openSocket from 'socket.io-client';
-import JoinRoom from "../JoinRoom";
+// import openSocket from 'socket.io-client';
+// import JoinRoom from "../JoinRoom";
 import "./Frontinput.css";
 
+import PropTypes from 'prop-types';
+// import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
-window.socket = openSocket('http://localhost:8000');
+// const styles = theme => ({
+//     container: {
+//       display: 'flex',
+//       flexWrap: 'wrap',
+//     },
+//     textField: {
+//       marginLeft: theme.spacing.unit,
+//       marginRight: theme.spacing.unit,
+//       width: 200,
+//     },
+//     dense: {
+//       marginTop: 19,
+//     },
+//     menu: {
+//       width: 200,
+//     },
+//   });
 
-class FrontInput extends Component {
-    constructor(props) {
-        super(props);
-    
-        this.state = {
-          counters: []
-        };  
-        //socketIO stuff
-        this.sendSocketIO = this.sendSocketIO.bind(this);
-        this.createGame = this.createGame.bind(this);
+const FrontInput = props => {
 
-      }
-    componentDidMount() {
-
-        window.socket.connect();
-
-        window.socket.on('connected', (data) => {
-            console.log('connected');
-        })
-
-        window.socket.on('update players', (data) => {
-            console.log('updating player list');
-            this.setState({
-              players: data.players
-            })
-            console.log(data.players);
-        });
-      
-
-        window.socket.on('joined', (data) => {
- 
-            this.setState((prevState) => {
-              let newCurrentScreen;
-              if (prevState.currentScreen === 'lobby') {
-                newCurrentScreen = 'game';
-              }
-              return {
-                cards: data.cards,
-                roomCode: data.roomCode ? data.roomCode : prevState.roomCode,
-                showModal: false,
-                currentScreen: newCurrentScreen || 'lobby',
-                joiningGame: false,
-              }
-            })
-          });
-
-
-
-    }
-
-            sendSocketIO() {
-            window.socket.emit('example_message', 'demo', 'second arg');
-        }
-        
-        createGame() {
-            console.log(`player creating game`);
-            window.socket.emit('create', {name: 'player'});
-            
-        }  
-  
-      render() {
         return (
-
             <Container className="h-100" fluid>
                 <Row>
                 <Col size="md-12">
                     {/* <button onClick={this.sendSocketIO}>Send Socket.io</button> */}
-                    <button className="createRoomButton" onClick={this.createGame}>Create Room</button>
-                    <JoinRoom />
+                    <button className="createRoomButton" onClick={props.createGame}>Create Room</button>
                 </Col>
                 </Row>
+                <form className='inputRoom' noValidate autoComplete="off" onSubmit={props.joinGame}>
+                    <TextField
+                        inputProps={{
+                            maxLength:5,
+                        }}
+                        id="standard-name"
+                        label="Room Code"
+                        className="inputRoomTxt"
+                        value={props.codeInput}
+                        onChange={props.handleChange}
+                        margin="normal"
+                        type="text"
+                        name="codeInput"
+                    />
+                </form>
             </Container>
         );
-      }
   }
   
   export default FrontInput;
