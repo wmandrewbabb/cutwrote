@@ -182,6 +182,10 @@ io.on('connection', function(socket){
           // joiningPlayer: data.name 
         });
 
+        socket.emit('room joined', {
+          roomCode,
+        });
+
     } else {
       // no gameroom exists for that room code
       socket.emit('bad roomcode');

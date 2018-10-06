@@ -96,7 +96,26 @@ class App extends Component {
         }
       })
     });
+
+    socket.on("room joined", (data) => {
+      console.log("Joining room! Room: " + data.roomCode);
+      this.setState((prevState) => {
+        let newCurrentScreen;
+        if (prevState.currentScreen === 'home') {
+          newCurrentScreen = 'lobby';
+        }
+        return {
+          // prompts: data.prompts,
+          roomCode: data.roomCode ? data.roomCode : prevState.roomCode,
+          showModal: false,
+          currentScreen: newCurrentScreen || 'lobby',
+        }
+      })
+    });
   }
+
+ 
+
 
   createGame() {
       console.log(`player creating game`);
