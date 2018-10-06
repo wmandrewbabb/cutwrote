@@ -7,7 +7,7 @@ import Popup from "./components/Popup";
 import Modal from "./components/Modal";
 import RoomDashBoard from "./components/RoomDashBoard";
 import TakeASeat from "./components/TakeASeat";
-// import PlayerList from "./components/PlayerList";
+import PlayerList from "./components/PlayerList";
 // import Prompt from "./components/Prompt";
 // import PromptInput from "./components/PromptInput";
 // import Votes from "./components/Votes";
@@ -18,19 +18,9 @@ import TakeASeat from "./components/TakeASeat";
 
 import io from 'socket.io-client';
 
+//oh wow this doesn't break heroku anymore
+
 const socket = io({host:'/', port:''}, {transports: ['websocket']});
-
-
-// const App = () => (
-//   <div >
-//     {/* <BackgroundBokke /> */}
-//       <Nav />
-//       <SplashTitle />
-//       <FrontInput />
-//       <BackgroundBokke/>
-
-//   </div>
-// );
 
 class App extends Component {
   constructor() {
@@ -67,6 +57,12 @@ class App extends Component {
   } 
 
   componentDidMount() {
+
+    //ALL OF OUR GODDAMN SOCKETS LIVE HERE
+    //Why am I mad? Because I'm an idiot that tried loading this individually on each component and learned the hard way
+    //that loading them that way is 1) a mess and 2) a bad idea and 3) leads to problems
+    //Thanks stackoverflow for telling me that I was dumb way before documentation did
+
     socket.connect();
 
     socket.on('connected', (data) => {
@@ -79,7 +75,8 @@ class App extends Component {
           players: data.players
         })
         console.log(data.players);
-        this.playerCount = this.checkNumberofPlayers();
+        this.checkNumberofPlayers();
+        console.log("Player Count: " + this.state.playerCount);
     });
 
     socket.on('room created', (data) => {
@@ -140,7 +137,6 @@ class App extends Component {
       showMenu: false,
     })
   }
-
   
   enterName(e) {
     e.preventDefault();
@@ -152,7 +148,6 @@ class App extends Component {
       console.log('TOO MANY PLAYERS');
     }
   }
-
 
   setMessage(message, type = null, timeout = 2000) {
     switch(type) {
@@ -189,17 +184,9 @@ class App extends Component {
   }
 
   checkNumberofPlayers() {
-    let numOfPlayers = 0;
-
-    console.log('this is this.state.players: ' + this.state.players[0].playing);
-    console.log('this is this.state.playerList: ' + this.state.playerList);
-    for (var x=0; x < this.state.players.length; x++) {
-      if(this.state.players[x].playing) {
-        numOfPlayers++;
-      }
-      console.log("Number of players playing: " + numOfPlayers);
-      return numOfPlayers;
-    }
+    this.setState({
+      playerCount: this.state.players.filter(x => x.playing).length
+    })
   }
  
   handleChange(event) {
@@ -209,6 +196,8 @@ class App extends Component {
       [name]: value
     })
   };
+
+  //ACTUALLY RENDER ALL MY DAMN COMPONENTS
   
   render() {
     const {
@@ -267,8 +256,10 @@ class App extends Component {
                 handleChange={this.handleChange}
                 enterName={this.enterName}
               />
-              {/*<PlayerList />
-              <ReadyButton /> */}
+              <PlayerList 
+                players={players}
+              />
+              {/*<ReadyButton /> */}
             </div>}
           {/*{currentScreen === 'prompts' &&
             <div>
