@@ -11,6 +11,7 @@ const TakeASeat = props => {
                     <Col size="md-12">
                     <p>Enter a name to join the game:</p>
                     <form className='name' noValidate autoComplete="off" onSubmit={props.enterName}>
+                        {props.playing === false &&
                         <TextField
                             inputProps={{
                                 maxLength:10,
@@ -23,7 +24,10 @@ const TakeASeat = props => {
                             margin="normal"
                             type="text"
                             name="name"
-                        />
+                        />}
+                        {props.playing === true &&
+                        <p>You've taken a seat!</p>
+                        }
                     </form>
                     </Col>
                 </Row>

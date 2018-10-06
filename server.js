@@ -196,14 +196,11 @@ io.on('connection', function(socket){
   });
 
   socket.on('takingSeat', (data) => {
-    console.log("Getting a request to take seat from " + data.name + "in room" + data.roomCode);
+    console.log("Getting a request to take seat from " + data.name + " in room " + data.roomCode);
     let name = data.name;
     let roomCode = data.roomCode;
 
     const { playerList} = gameRooms[roomCode];
-
-
-    console.log("Name: " + name);
 
     gameRooms[roomCode].playerList.players[socket.id].name = name;
     gameRooms[roomCode].playerList.players[socket.id].playing = true;

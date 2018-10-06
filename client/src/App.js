@@ -46,6 +46,7 @@ class App extends Component {
       viewers: [],
       gameStarted: false,
       playersReady: false,
+      playing: false,
       message: '',
       modalMessage: '',
       popupMessage: '',
@@ -55,14 +56,14 @@ class App extends Component {
       showPopup: false,
       codeInput: '',
       multiline: 'Controlled',
+      playerCount: 0,
     }
 
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.enterName = this.enterName.bind(this);
-
-
+    this.checkNumberofPlayers = this.checkNumberofPlayers.bind(this);
   } 
 
   componentDidMount() {
@@ -78,6 +79,7 @@ class App extends Component {
           players: data.players
         })
         console.log(data.players);
+        this.playerCount = this.checkNumberofPlayers();
     });
 
     socket.on('room created', (data) => {
@@ -116,7 +118,7 @@ class App extends Component {
   }
 
  
-
+//FUNCTION JUNCTION
 
   createGame() {
       console.log(`player creating game`);
@@ -142,8 +144,13 @@ class App extends Component {
   
   enterName(e) {
     e.preventDefault();
-    console.log(`${this.state.name} is taking a seat at the game in room ${this.state.roomCode}`);
-    socket.emit('takingSeat', {name: this.state.name, roomCode: this.state.roomCode})
+    if (this.state.playerCount < 8) {
+      console.log(`${this.state.name} is taking a seat at the game in room ${this.state.roomCode}`);
+      socket.emit('takingSeat', {name: this.state.name, roomCode: this.state.roomCode})
+      this.state.playing = true;
+    } else {
+      console.log('TOO MANY PLAYERS');
+    }
   }
 
 
@@ -180,6 +187,20 @@ class App extends Component {
       }
     })
   }
+
+  checkNumberofPlayers() {
+    let numOfPlayers = 0;
+
+    console.log('this is this.state.players: ' + this.state.players[0].playing);
+    console.log('this is this.state.playerList: ' + this.state.playerList);
+    for (var x=0; x < this.state.players.length; x++) {
+      if(this.state.players[x].playing) {
+        numOfPlayers++;
+      }
+      console.log("Number of players playing: " + numOfPlayers);
+      return numOfPlayers;
+    }
+  }
  
   handleChange(event) {
     let name = event.target.name;
@@ -208,6 +229,8 @@ class App extends Component {
       showModal,
       showPopup,
       codeInput,
+      playerCount,
+      playing,
     } = this.state;
 
     return(
@@ -240,6 +263,7 @@ class App extends Component {
               />
               <TakeASeat 
                 name={name}
+                playing={playing}
                 handleChange={this.handleChange}
                 enterName={this.enterName}
               />
