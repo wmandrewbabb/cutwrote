@@ -18,7 +18,7 @@ import Modal from "./components/Modal";
 
 import io from 'socket.io-client';
 
-const socket = io('ws://localhost:3001', {transports: ['websocket']});
+const socket = io({host:'/', port:''}, {transports: ['websocket']});
 
 
 // const App = () => (
