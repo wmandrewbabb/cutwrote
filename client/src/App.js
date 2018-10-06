@@ -5,8 +5,8 @@ import Nav from "./components/Nav";
 import BackgroundBokke from "./components/BackgroundBokke";
 import Popup from "./components/Popup";
 import Modal from "./components/Modal";
-// import RoomDashBoard from "./components/RoomDashBoard";
-// import TakeASeat from "./components/TakeASeat";
+import RoomDashBoard from "./components/RoomDashBoard";
+import TakeASeat from "./components/TakeASeat";
 // import PlayerList from "./components/PlayerList";
 // import Prompt from "./components/Prompt";
 // import PromptInput from "./components/PromptInput";
@@ -60,9 +60,10 @@ class App extends Component {
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.enterName = this.enterName.bind(this);
 
 
-  }
+  } 
 
   componentDidMount() {
     socket.connect();
@@ -90,7 +91,7 @@ class App extends Component {
         }
         return {
           // prompts: data.prompts,
-          roomCode: data.roomCode ? data.roomCode : prevState.roomCode,
+          roomCode: data.roomCode,
           showModal: false,
           currentScreen: newCurrentScreen || 'lobby',
         }
@@ -137,6 +138,14 @@ class App extends Component {
       showMenu: false,
     })
   }
+
+  
+  enterName(e) {
+    e.preventDefault();
+    console.log(`${this.state.name} is taking a seat at the game in room ${this.state.roomCode}`);
+    socket.emit('takingSeat', {name: this.state.name, roomCode: this.state.roomCode})
+  }
+
 
   setMessage(message, type = null, timeout = 2000) {
     switch(type) {
@@ -226,10 +235,15 @@ class App extends Component {
             </div>}
           {currentScreen === 'lobby' &&
             <div>
-              <p>You're seeing the lobby!</p>
-              {/* <RoomDashBoard />
-              <TakeASeat />
-              <PlayerList />
+              <RoomDashBoard 
+                roomCode={roomCode}
+              />
+              <TakeASeat 
+                name={name}
+                handleChange={this.handleChange}
+                enterName={this.enterName}
+              />
+              {/*<PlayerList />
               <ReadyButton /> */}
             </div>}
           {/*{currentScreen === 'prompts' &&

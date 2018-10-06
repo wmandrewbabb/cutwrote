@@ -32,6 +32,8 @@ if (process.env.NODE_ENV === "production") {
 
 const gameRooms = {};
 const prompts = require('./prompts.js');
+const picArchive = require('./picArchive.js');
+
 const promptLib = prompts.prompts;
 
 // io.listen();
@@ -94,7 +96,7 @@ class PlayerList {
         id: id,
         roomCode: this.players[id].roomCode, 
         score: this.players[id].score,
-        nickName: this.players[id].nickName,
+        name: this.players[id].name,
         playing: this.players[id].playing,
         ready: this.players[id].ready,
         voted: this.players[id].voted,
@@ -113,7 +115,7 @@ class PlayerList {
             this.id = id;
             this.roomCode = roomCode;
             this.score = 0;
-            this.nickName = "Not Entered";
+            this.name = "";
             this.playing = false;
             this.ready = false;
             this.voted = false;
@@ -192,6 +194,28 @@ io.on('connection', function(socket){
       console.log("bad roomcode");
     }
   });
+
+  socket.on('takingSeat', (data) => {
+    console.log("Getting a request to take seat from " + data.name + "in room" + data.roomCode);
+    let name = data.name;
+    let roomCode = data.roomCode;
+
+    const { playerList} = gameRooms[roomCode];
+
+
+    console.log("Name: " + name);
+
+    gameRooms[roomCode].playerList.players[socket.id].name = name;
+    gameRooms[roomCode].playerList.players[socket.id].playing = true;
+
+    let picPicker = picArchive.images;
+
+    gameRooms[roomCode].playerList.players[socket.id].playerPicture = picPicker[Math.floor(Math.random()*picPicker.length)].url;
+
+    io.sockets.in(roomCode).emit('update players', { 
+      players: playerList.prepareToSend(), 
+    });
+  })
 
   //Here's the function to create my roomcode
   // generates a random 5-digit alphanumeric room code for players to join

@@ -1,0 +1,67 @@
+.createRoomButton {
+    font-size: 150%;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    font-family: 'Special Elite', cursive;
+
+}
+
+.createRoomButton:hover {
+    text-decoration: none;
+    border: none!important;
+}
+
+.createRoomButton:active {
+    text-decoration: none;
+    border: none;
+}
+
+button {
+
+    text-decoration: none;
+    border: none;
+}
+
+button:hover{
+    text-decoration: none;
+    border: none;
+}
+
+button:focus{
+    text-decoration: none;
+    border: none;
+}
+
+button:active{
+    text-decoration: none;
+    border: none;
+}
+
+
+.MuiInputBase-root-36 {
+    font-family: 'Special Elite', cursive;
+    font-size: 150%!important;
+
+}
+
+.MuiInputLabel-shrink-12 {
+    font-family: 'Special Elite', cursive!important;
+    font-size: 150%!important;
+
+}
+
+.MuiFormLabel-root-16 {
+    font-family: 'Special Elite', cursive!important;
+    font-size: 150%!important;
+
+}
+
+.MuiInputBase-input-46 {
+    font-family: 'Special Elite', cursive!important;
+    font-size: 150%!important;
+    color: #000!important;
+}
+
+label, input {
+    font-family: 'Special Elite', cursive!important;
+}
