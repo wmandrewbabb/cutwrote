@@ -18,7 +18,7 @@ import Modal from "./components/Modal";
 
 import io from 'socket.io-client';
 
-const socket = io();
+const socket = io('ws://localhost:3001', {transports: ['websocket']});
 
 
 // const App = () => (
@@ -57,7 +57,6 @@ class App extends Component {
       multiline: 'Controlled',
     }
 
-    this.sendSocketIO = this.sendSocketIO.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -97,10 +96,6 @@ class App extends Component {
         }
       })
     });
-  }
-
-  sendSocketIO() {
-    socket.emit('example_message', 'demo', 'second arg');
   }
 
   createGame() {
@@ -189,7 +184,7 @@ class App extends Component {
 
     return(
         <div className="h-100" fluid="true">
-          <Nav name={name}/>
+          <Nav name={name} roomCode={roomCode}/>
           {/* <BackgroundBokke /> */}
           {showPopup &&
             <Popup popupMessage={popupMessage} />
@@ -210,14 +205,15 @@ class App extends Component {
                 message={message}          />
               <BackgroundBokke/>
             </div>}
-          {/* {currentScreen === 'lobby' &&
+          {currentScreen === 'lobby' &&
             <div>
-              <RoomDashBoard />
+              <p>You're seeing the lobby!</p>
+              {/* <RoomDashBoard />
               <TakeASeat />
               <PlayerList />
-              <ReadyButton />
+              <ReadyButton /> */}
             </div>}
-          {currentScreen === 'prompts' &&
+          {/*{currentScreen === 'prompts' &&
             <div>
               <Prompt />
               <PromptInput />

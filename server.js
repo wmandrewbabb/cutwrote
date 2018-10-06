@@ -2,14 +2,14 @@ const express = require("express");
 const logger = require('morgan');
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const routes = require("./routes");
+// const routes = require("./routes");
 const app = express();
 const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const port = process.env.PORT || 3001;
 
 app.use(logger('dev'));
 app.use(express.static(`${__dirname}/public`));
-
-const port = process.env.PORT || 3001;
 
 server.listen(port, function() {
   console.log(`Cutwrote game listening on port: ${port}`);
@@ -19,7 +19,7 @@ server.listen(port, function() {
 // Define middleware here
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// Serve up static assets (usually on heroku)
+// Serve up static assets (usually on heroku) 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
@@ -27,8 +27,7 @@ if (process.env.NODE_ENV === "production") {
 // app.use(routes);
 
 // Socket.io
-const http = require('http').Server(app);
-const io = require('socket.io')(server);
+
 // const Sockets= require('./serverSockets.js');
 
 const gameRooms = {};
@@ -86,25 +85,27 @@ class PlayerList {
     return Object.keys(this.players).length;
   }
 
-        prepareToSend() {
-            let playersPackaged = [];
+  prepareToSend() {
+
+    let playersPackaged = [];
         
-            for (let id in this.players) {
-              playersPackaged.push({
-                id: id,
-                roomCode: this.players[id].roomCode, 
-                score: this.players[id].score,
-                nickName: this.players[id].nickName,
-                playing: this.players[id].playing,
-                ready: this.players[id].ready,
-                voted: this.players[id].voted,
-                canVote: this.players[id].canVote,
-              });
-            }
-        
-            return playersPackaged;
-          }
+    for (let id in this.players) {
+      playersPackaged.push({
+        id: id,
+        roomCode: this.players[id].roomCode, 
+        score: this.players[id].score,
+        nickName: this.players[id].nickName,
+        playing: this.players[id].playing,
+        ready: this.players[id].ready,
+        voted: this.players[id].voted,
+        canVote: this.players[id].canVote,
+        playerPicture: this.players[id].playerPicture,
+      });
     }
+        
+    return playersPackaged;
+  }
+}
 
     class Player {
         // Player contains all data and methods pertaining to each individual player
@@ -117,6 +118,7 @@ class PlayerList {
             this.ready = false;
             this.voted = false;
             this.canVote = true;
+            this.playerPicture = "";
         }
     }
 
@@ -131,10 +133,6 @@ io.on('connection', function(socket){
   
   socket.on('disconnect', function(){
     console.log('User Disconnected');
-  });
-
-  socket.on('example_message', function(msg, msg2){
-    console.log('message: ' + msg + ' ' + msg2);
   });
   
   socket.on('create', (data) => {
