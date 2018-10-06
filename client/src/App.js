@@ -8,6 +8,7 @@ import Modal from "./components/Modal";
 import RoomDashBoard from "./components/RoomDashBoard";
 import TakeASeat from "./components/TakeASeat";
 import PlayerList from "./components/PlayerList";
+// import ReadyButton from "./components/ReadyButton";
 // import Prompt from "./components/Prompt";
 // import PromptInput from "./components/PromptInput";
 // import Votes from "./components/Votes";
