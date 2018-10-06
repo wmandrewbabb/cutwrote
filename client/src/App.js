@@ -3,7 +3,18 @@ import SplashTitle from "./components/SplashTitle";
 import FrontInput from "./components/Frontinput";
 import Nav from "./components/Nav";
 import BackgroundBokke from "./components/BackgroundBokke";
-// import JoinRoom from "./components/JoinRoom";
+import Popup from "./components/Popup";
+import Modal from "./components/Modal";
+// import RoomDashBoard from "./components/RoomDashBoard";
+// import TakeASeat from "./components/TakeASeat";
+// import PlayerList from "./components/PlayerList";
+// import Prompt from "./components/Prompt";
+// import PromptInput from "./components/PromptInput";
+// import Votes from "./components/Votes";
+// import ScoreScreen from "./components/ScoreScreen";
+// import FinalScore from "./components/FinalScore";
+// import SaveGame from "./components/SaveGame";
+// import ReturntoStartButton from "./components/ReturntoStartButton";
 
 import io from 'socket.io-client';
 
@@ -69,19 +80,20 @@ class App extends Component {
         console.log(data.players);
     });
 
-    socket.on('joined', (data) => {
- 
+    socket.on('room created', (data) => {
+
+      console.log("New Room Created! Code: " + data.roomCode);
       this.setState((prevState) => {
         let newCurrentScreen;
+
         if (prevState.currentScreen === 'home') {
           newCurrentScreen = 'lobby';
         }
         return {
-          prompts: data.prompts,
+          // prompts: data.prompts,
           roomCode: data.roomCode ? data.roomCode : prevState.roomCode,
           showModal: false,
           currentScreen: newCurrentScreen || 'lobby',
-          joiningGame: false,
         }
       })
     });
@@ -177,8 +189,16 @@ class App extends Component {
 
     return(
         <div className="h-100" fluid="true">
-          <Nav />
+          <Nav name={name}/>
           {/* <BackgroundBokke /> */}
+          {showPopup &&
+            <Popup popupMessage={popupMessage} />
+          }
+          {showModal &&
+          <Modal
+            message={modalMessage}
+            buttons={modalButtons}
+          />}
           {currentScreen === 'home' && 
             <div>
               <SplashTitle />
@@ -190,7 +210,33 @@ class App extends Component {
                 message={message}          />
               <BackgroundBokke/>
             </div>}
-
+          {/* {currentScreen === 'lobby' &&
+            <div>
+              <RoomDashBoard />
+              <TakeASeat />
+              <PlayerList />
+              <ReadyButton />
+            </div>}
+          {currentScreen === 'prompts' &&
+            <div>
+              <Prompt />
+              <PromptInput />
+            </div>}  
+          {currentScreen === 'game' &&
+            <div>
+              <PromptGame />
+              <Votes />
+            </div>}
+          {currentScreen === 'score' &&
+            <div>
+              <ScoreScreen />
+            </div>}
+          {currentScreen === 'gameover' &&
+            <div>
+              <FinalScore />
+              <SaveGame />
+              <ReturntoStartButton />
+            </div>}     */}
 
         </div>
 

@@ -92,7 +92,13 @@ class PlayerList {
             for (let id in this.players) {
               playersPackaged.push({
                 id: id,
+                roomCode: this.players[id].roomCode, 
                 score: this.players[id].score,
+                nickName: this.players[id].nickName,
+                playing: this.players[id].playing,
+                ready: this.players[id].ready,
+                voted: this.players[id].voted,
+                canVote: this.players[id].canVote,
               });
             }
         
@@ -105,7 +111,12 @@ class PlayerList {
         constructor(id, roomCode) {
             this.id = id;
             this.roomCode = roomCode;
-            // this.score = [];
+            this.score = 0;
+            this.nickName = "Not Entered";
+            this.playing = false;
+            this.ready = false;
+            this.voted = false;
+            this.canVote = true;
         }
     }
 
@@ -146,6 +157,10 @@ io.on('connection', function(socket){
     // updates the players playerList
     socket.emit('update players', {
       players: gameRooms[roomCode].playerList.prepareToSend(),
+    });
+
+    socket.emit('room created', {
+      roomCode,
     });
     
   });

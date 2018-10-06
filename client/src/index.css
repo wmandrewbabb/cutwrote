@@ -5,3 +5,7 @@ html, body, #root, #root > div {
 .container-fluid {
     height: 100%;
 } */
+
+.App {
+    height: 100%;
+}
