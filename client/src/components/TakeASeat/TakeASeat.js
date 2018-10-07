@@ -9,7 +9,7 @@ const TakeASeat = props => {
             <Container fluid>
                 <Row>
                     <Col size="md-12">
-                    <p>Enter a name to join the game:</p>
+                    {props.playing ? (<p>You've taken a seat!</p>) : (<p>Enter a name to join the game:</p>)}
                     <form className='name' noValidate autoComplete="off" onSubmit={props.enterName}>
                         {props.playing === false &&
                         <TextField
@@ -25,9 +25,7 @@ const TakeASeat = props => {
                             type="text"
                             name="name"
                         />}
-                        {props.playing === true &&
-                        <p>You've taken a seat!</p>
-                        }
+
                     </form>
                     </Col>
                 </Row>

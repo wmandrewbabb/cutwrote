@@ -19,13 +19,16 @@ const ReadyButton = props => {
 
     return (
         <Container className="startButtonContainer justify-contents-center w-100" fluid>
-            <Row className="w-100 align-center">
+            <Row className="w-100 align-center buttonRow">
             {props.playing === true && 
-                <Col style={{alignItems: 'center'}} size="md-12">
+                <Col size="md-12">
+                <div className="buttonRow">
                     <CheckPlayers 
                      startGame={props.startGame}
                      playerCount={props.playerCount}
                     />
+                </div>
+
                 </Col>
             }
             </Row>

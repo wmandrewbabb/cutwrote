@@ -154,7 +154,10 @@ class App extends Component {
     if (this.state.playerCount < 8) {
       console.log(`${this.state.name} is taking a seat at the game in room ${this.state.roomCode}`);
       socket.emit('takingSeat', {name: this.state.name, roomCode: this.state.roomCode})
-      this.state.playing = true;
+      this.setState({
+        playing: true,
+      })
+      // this.state.playing = true;
     } else {
       console.log('TOO MANY PLAYERS');
     }

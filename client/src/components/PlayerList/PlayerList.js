@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 // import DeleteBtn from "../../components/DeleteBtn";
 import { Row, Container } from "../../components/Grid";
 import { List, ListItem } from "../../components/PlayerFace";
@@ -15,7 +15,7 @@ export const PlayerList = props => {
                   {props.players.filter(x => x.playing).map(x => (
                          <ListItem key={x.id}>
                          <div className="crushPic">
-                            <img src={x.playerPicture}></img>
+                            <img src={x.playerPicture} alt={x.name}></img>
                             <p>{x.name}</p>
                          </div>
                          </ListItem>  

@@ -1,0 +1,38 @@
+.buttonBox {
+    text-align: center; 
+    justify-content: center;
+    align-content: center;
+}
+
+.buttonRow {
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    margin-top: 25px;
+}
+
+.readyButton {
+    text-align: center;
+    font-size: 200%;
+    font-family: 'Alfa Slab One', cursive;
+    color: white;
+    background-color: black;
+    padding: 10px;
+    border-radius: 4px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.readyButtonGray {
+    text-align: center;
+    font-size: 200%;
+    font-family: 'Alfa Slab One', cursive;
+    background-color: lightgray;
+    color:white;
+    padding: 10px;
+    border-radius: 4px;
+    padding-left: 15px;
+    padding-right: 15px;
+}

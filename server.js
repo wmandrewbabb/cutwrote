@@ -57,7 +57,8 @@ class GameRoom {
   constructor(roomCode) {
     this.roomCode = roomCode;
     this.playerList = new PlayerList(roomCode);
-    // this.prompts = new Prompts;
+    this.currentScreen = "lobby";
+    this.prompts = [];
   }
         
         // adds a player to the room
@@ -67,13 +68,14 @@ class GameRoom {
 
 }
 
-class Prompts {
+// class Prompts {
 
-  constructor(prompts) {
-    this.prompts = promptLib;
-  }
+//   constructor(numPlayers, roomCode) {
+//     this.prompts = [];
+    
+//   }
       
-}
+// }
 
 class PlayerList {
   // PlayerList handles all data and methods pertaining to the list of players
@@ -102,6 +104,7 @@ class PlayerList {
         voted: this.players[id].voted,
         canVote: this.players[id].canVote,
         playerPicture: this.players[id].playerPicture,
+        playerID: this.players[id].playerID,
       });
     }
         
@@ -121,6 +124,7 @@ class PlayerList {
             this.voted = false;
             this.canVote = true;
             this.playerPicture = "";
+            this.playerID = 0;
         }
     }
 
@@ -169,7 +173,6 @@ io.on('connection', function(socket){
   socket.on('join', (data) => {
     let roomCode = data.roomCode.toUpperCase();
     console.log("Getting a request to join room " + data.roomCode);
-    console.log(gameRooms[roomCode]);
 
     // if there is a room to join...
     if (gameRooms[roomCode]) {
@@ -188,6 +191,9 @@ io.on('connection', function(socket){
           roomCode,
         });
 
+        console.log(gameRooms[roomCode]);
+
+
     } else {
       // no gameroom exists for that room code
       socket.emit('bad roomcode');
@@ -200,10 +206,13 @@ io.on('connection', function(socket){
     let name = data.name;
     let roomCode = data.roomCode;
 
-    const { playerList} = gameRooms[roomCode];
+    const { playerList } = gameRooms[roomCode];
 
     gameRooms[roomCode].playerList.players[socket.id].name = name;
     gameRooms[roomCode].playerList.players[socket.id].playing = true;
+
+    //Here we're going to randomly assign a player an avatar as they sit down -- no, they don't get to choose
+    //The totally rad skull one is the best, by the way
 
     let picPicker = picArchive.images;
 
@@ -212,6 +221,45 @@ io.on('connection', function(socket){
     io.sockets.in(roomCode).emit('update players', { 
       players: playerList.prepareToSend(), 
     });
+  })
+
+  socket.on("startGame", (data) => {
+    console.log(`Starting game in room ${data.roomCode}`);
+    let roomCode = data.roomCode;
+
+    gameRooms[roomCode].currentScreen = "firstTransition";
+
+    let numPlayers = 0;
+    let iterator = 0;
+    let playerBox = [];
+    let playerKey = Object.keys(gameRooms[roomCode].playerList.players);
+
+    console.log(playerKey);
+
+    while (iterator < playerKey.length)
+    {
+      let iv = playerKey[iterator];
+      console.log(gameRooms[roomCode].playerList.players[iv].playing);
+
+      if (gameRooms[roomCode].playerList.players[iv].playing === true) 
+      {
+        numPlayers++;
+        playerBox.push(gameRooms[roomCode].playerList.players[iv]);
+        gameRooms[roomCode].playerList.players[iv].playerID = iterator;
+      }
+    
+      iterator++;
+    }
+
+    // console.log(`Player in [0]: ${Object.keys(gameRooms[roomCode].playerList.players)}`);
+    console.log (`Number of players: ${numPlayers}`);
+    console.log (`activeplayers: ${playerBox}`);
+  
+
+    // gameRooms[roomCode].playerList.players.filter(x => x.playing).length;
+    console.log(numPlayers);
+
+
   })
 
   //Here's the function to create my roomcode
