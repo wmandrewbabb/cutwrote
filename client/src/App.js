@@ -8,7 +8,7 @@ import Modal from "./components/Modal";
 import RoomDashBoard from "./components/RoomDashBoard";
 import TakeASeat from "./components/TakeASeat";
 import PlayerList from "./components/PlayerList";
-// import ReadyButton from "./components/ReadyButton";
+import ReadyButton from "./components/ReadyButton";
 // import Prompt from "./components/Prompt";
 // import PromptInput from "./components/PromptInput";
 // import Votes from "./components/Votes";
@@ -55,6 +55,7 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.enterName = this.enterName.bind(this);
     this.checkNumberofPlayers = this.checkNumberofPlayers.bind(this);
+    this.startGame = this.startGame.bind(this);
   } 
 
   componentDidMount() {
@@ -130,6 +131,15 @@ class App extends Component {
       console.log(`joining game ${this.state.codeInput}`);
       socket.emit('join', {roomCode: this.state.codeInput});
     } 
+  }
+
+  startGame() {
+    console.log("You're starting a game!");
+    if(this.state.playerCount > 1) { //We're going to set this to 1 for testing purposes, it should be 2
+      socket.emit('startGame', {roomCode:this.state.codeInput})
+    } else {
+      console.log("Not enough players yet!");
+    }
   }
 
   setScreen(screen) {
@@ -260,7 +270,11 @@ class App extends Component {
               <PlayerList 
                 players={players}
               />
-              {/*<ReadyButton /> */}
+              <ReadyButton 
+                playerCount={playerCount}
+                startGame={this.startGame}
+                playing={playing}
+              />
             </div>}
           {/*{currentScreen === 'prompts' &&
             <div>
