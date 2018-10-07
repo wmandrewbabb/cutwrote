@@ -8,7 +8,7 @@ const RoomDashBoard = props => {
         <Row>
         <Col size="md-12">
             <p className="roomCodeBig">{props.roomCode}</p>
-            <p>Send this code to your friends!</p>
+            <p className="condenseTxt">Send this code to your friends!</p>
         </Col>
         </Row>
         </Container>

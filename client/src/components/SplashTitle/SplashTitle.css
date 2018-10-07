@@ -3,6 +3,7 @@
     font-size: 3.8em;
     /* text-transform: uppercase; */
     letter-spacing: 0.5em;
+    opacity: .99;  
   }
   
   .ml15 .word {

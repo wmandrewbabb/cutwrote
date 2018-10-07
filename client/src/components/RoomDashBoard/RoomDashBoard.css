@@ -1,9 +1,10 @@
 .roomCodeBig{
     font-size: 600%;
-    font-family: 'Special Elite', cursive;
-    margin-bottom: 4px;
+    font-family: 'Alfa Slab One', cursive;
+    margin-bottom: 14px;
     line-height: 70%;
     margin-top: 10vh;
+    color: rgb(80, 80, 80);
 }
 
 p{

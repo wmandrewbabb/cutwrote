@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Row, Container } from "../../components/Grid";
 import { List, ListItem } from "../../components/PlayerFace";
 // import { Input, TextArea, FormBtn } from "../../components/Form";
+import "./PlayerList.css"
 
 export const PlayerList = props => {
 
@@ -13,8 +14,10 @@ export const PlayerList = props => {
                 <List>
                   {props.players.filter(x => x.playing).map(x => (
                          <ListItem key={x.id}>
+                         <div className="crushPic">
                             <img src={x.playerPicture}></img>
                             <p>{x.name}</p>
+                         </div>
                          </ListItem>  
                   )
                   )}
@@ -27,16 +30,5 @@ export const PlayerList = props => {
       );
   }
 
-//   {this.state.books.map(book => (
-//     <ListItem key={book._id}>
-//       <a href={"/books/" + book._id}>
-//         <strong>
-//           {book.title} by {book.author}
-//         </strong>
-//       </a>
-//       <DeleteBtn />
-//     </ListItem>
-//   ))}
-  
   export default PlayerList;
 

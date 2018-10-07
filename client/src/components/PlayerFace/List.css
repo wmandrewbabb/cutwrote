@@ -34,6 +34,7 @@
 
 .playerFaceDiv {
   width: 10%;
+  min-width: 100px;
   margin-right: 10px;
   /* display: inline; */
   float: left;
@@ -45,10 +46,19 @@
 }
 
 .playerFaceDiv p {
-  align-content: center;
-  justify-content: center;
+  /* align-content: center; 
+  justify-content: center; */
+  font-family: 'Alfa Slab One', cursive;
   text-align: center;
+  text-shadow: 1px 1px 0px  #fff, -1px -1px 0px  #fff, 1px -1px 0px  #fff, -1px 1px 0px  #fff;
+  bottom: 20px;
+  position: relative;
+  float: none;
+  font-size: 100%;
+  /* display: unset; */
 }
+
 .playerFaceContainer {
   width: 100%;
+  padding-left: 2%;
 }
