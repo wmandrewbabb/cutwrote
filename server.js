@@ -88,8 +88,8 @@ class GamePrompt {
     this.player2Name = gameRooms[roomCode].playerList.players[player2].name;
     this.answer1 = "";
     this.answer2 = "";
-    this.answer1votes = 0;
-    this.answer2votes = 0;
+    this.answer1Vtes = 0;
+    this.answer2Votes = 0;
     this.alreadyshown = false;
   }
       
@@ -103,6 +103,28 @@ class PromptList {
 
   get length() {
     return Object.keys(this.prompts).length;
+  }
+
+  preparePrompts() {
+    let promptsPackaged = [];
+
+    for(let id in this.prompts) {
+      promptsPackaged.push({
+        id:id,
+        prompt: this.prompts[id].prompt,
+        player1ID: this.prompts[id].player1ID,
+        player1Name: this.prompts[id].player1Name,
+        player2ID: this.prompts[id].player2ID,
+        player2Name: this.prompts[id].player2Name,
+        answer1: this.prompts[id].answer1,
+        answer2: this.prompts[id].answer2,
+        answer1Votes: this.prompts[id].answer1Votes,
+        answer2Votes: this.prompts[id].answer2Votes,
+        alreadyshown: this.prompts[id].alreadyshown,
+      });
+    }
+
+    return promptsPackaged;
   }
 
 }
@@ -264,6 +286,8 @@ io.on('connection', function(socket){
     let iterator = 0;
     let playerBox = [];
     let playerKey = Object.keys(gameRooms[roomCode].playerList.players);
+    const { playerList, promptList } = gameRooms[roomCode];
+
 
     console.log(playerKey);
 
@@ -338,6 +362,11 @@ io.on('connection', function(socket){
       //  this is what I get for building this one the wrong day lol
 
         console.log(gameRooms[roomCode]);
+
+        io.sockets.in(roomCode).emit('start your game', { 
+          players: playerList.prepareToSend(), 
+          prompts: promptList.preparePrompts(),
+        });
       //   console.log(`This is what gameRoom's prompt 0 looks like: ${gameRooms[roomCode].promptList.prompts[0].prompt}`)
       //   console.log(`This is what gameRoom's prompt 1 looks like: ${gameRooms[roomCode].promptList.prompts[1].prompt}`)
       //   console.log(`This is what gameRoom's prompt 0's player1Name looks like: ${gameRooms[roomCode].promptList.prompts[0].player1Name}`)

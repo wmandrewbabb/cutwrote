@@ -1,0 +1,25 @@
+.fullBlackScreen {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    font-family: 'Alfa Slab One', cursive;
+    font-size: 200%;
+    margin-left: -16px;
+    padding-top: 33%;
+}
+
+.ml4 {
+    position: relative;
+    font-weight: 900;
+    font-size: 4.5em;
+  }
+
+  .ml4 .letters {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    top: 0.3em;
+    right: 0;
+    opacity: 0; 
+  }

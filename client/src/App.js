@@ -9,6 +9,7 @@ import RoomDashBoard from "./components/RoomDashBoard";
 import TakeASeat from "./components/TakeASeat";
 import PlayerList from "./components/PlayerList";
 import ReadyButton from "./components/ReadyButton";
+import ReadySetGo from "./components/ReadySetGo";
 // import TransitionSlide from "./components/TransitionSlide"
 // import Prompt from "./components/Prompt";
 // import PromptInput from "./components/PromptInput";
@@ -57,6 +58,7 @@ class App extends Component {
     this.enterName = this.enterName.bind(this);
     this.checkNumberofPlayers = this.checkNumberofPlayers.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.proceed = this.proceed.bind(this);
   } 
 
   componentDidMount() {
@@ -115,6 +117,31 @@ class App extends Component {
         }
       })
     });
+
+    socket.on("start your game", (data) => {
+      console.log("Going to screen transition!");
+      let newScreen = 'readyset';
+      this.setState({
+        players: data.players,
+        prompts: data.prompts,
+        currentScreen: newScreen,
+      })
+
+
+      // if(startTimer) {
+      //   clearTimeout(startTimer);
+      // }
+      
+      setTimeout(() => { 
+        this.setState({
+          currentScreen: 'prompt1'
+        })
+       }, 7000);
+
+
+      
+      // this.checkNumberofPlayers();
+      })
   }
 
  
@@ -188,6 +215,12 @@ class App extends Component {
           message
         });
     }
+  }
+
+  proceed() {
+    this.setState({
+      currentScreen: 'prompts'
+    })
   }
 
   toggleMenu() {
@@ -280,6 +313,9 @@ class App extends Component {
                 playing={playing}
               />
             </div>}
+            {currentScreen === 'readyset' &&
+              <ReadySetGo />
+            }
           {/*{currentScreen === 'prompts' &&
             <div>
               <Prompt />

@@ -30,6 +30,7 @@
     "mongoose": "^5.0.17",
     "morgan": "^1.9.1",
     "react": "^16.5.2",
+    "react-countdown-clock": "^2.4.0",
     "react-dom": "^16.5.2",
     "react-transition-group": "^2.5.0",
     "socket.io": "^2.1.1",
