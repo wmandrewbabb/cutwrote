@@ -9,6 +9,7 @@ import RoomDashBoard from "./components/RoomDashBoard";
 import TakeASeat from "./components/TakeASeat";
 import PlayerList from "./components/PlayerList";
 import ReadyButton from "./components/ReadyButton";
+// import TransitionSlide from "./components/TransitionSlide"
 // import Prompt from "./components/Prompt";
 // import PromptInput from "./components/PromptInput";
 // import Votes from "./components/Votes";
@@ -34,7 +35,6 @@ class App extends Component {
       currentPrompt: {},
       currentScreen: 'home',
       players: [],
-      viewers: [],
       gameStarted: false,
       playersReady: false,
       playing: false,
@@ -48,6 +48,7 @@ class App extends Component {
       codeInput: '',
       multiline: 'Controlled',
       playerCount: 0,
+      showFooter: false,
     }
 
     this.createGame = this.createGame.bind(this);
@@ -221,7 +222,6 @@ class App extends Component {
       currentPrompt,
       currentScreen,
       players,
-      viewers,
       gameStarted,
       playersReady,
       message,
@@ -234,6 +234,7 @@ class App extends Component {
       codeInput,
       playerCount,
       playing,
+      showFooter,
     } = this.state;
 
     return(

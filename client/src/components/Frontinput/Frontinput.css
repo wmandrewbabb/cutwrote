@@ -4,16 +4,25 @@
     border: none;
     font-family: 'Special Elite', cursive;
     opacity: .99;
+    border-width: 0px!important;
+
 }
 
 .createRoomButton:hover {
     text-decoration: none;
     border: none!important;
+    border-width: 0px;
 }
 
 .createRoomButton:active {
     text-decoration: none;
     border: none;
+}
+
+.creatRoomButton:focus {
+    text-decoration: none;
+    border: none!important;
+    outline: none;
 }
 
 button {
@@ -32,6 +41,7 @@ button:hover{
 button:focus{
     text-decoration: none;
     border: none;
+    outline: 0px;
 }
 
 button:active{

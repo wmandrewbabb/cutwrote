@@ -3,7 +3,7 @@ import "./List.css";
 
 export const List = ({ children }) => {
   return (
-    <div className="playerFaceContainer">
+    <div className="d-flex playerFaceContainer justify-content-around">
         {children}
     </div>
   );

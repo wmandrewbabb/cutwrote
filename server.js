@@ -58,8 +58,9 @@ class GameRoom {
     this.roomCode = roomCode;
     this.playerList = new PlayerList(roomCode);
     this.currentScreen = "lobby";
-    this.prompts = [];
+    this.promptList = new PromptList(roomCode);
     this.activePlayerKeys = [];
+    this.currentRound = 0;
   }
         
         // adds a player to the room
@@ -67,16 +68,44 @@ class GameRoom {
     this.playerList.players[id] = new Player(id, this.roomCode);
   }
 
+  addPromptToRoom(prompt, id1, id2, roomCode, order) {
+    this.promptList.prompts[order] = new GamePrompt(prompt, id1, id2, roomCode);
+  }
+
+  // removeFromRoom(id) {
+      //this is going to be long
+  // }
+
 }
 
-// class Prompts {
+class GamePrompt {
 
-//   constructor(numPlayers, roomCode) {
-//     this.prompts = [];
-    
-//   }
+  constructor(prompt, player1, player2, roomCode) {
+    this.prompt = prompt;
+    this.player1ID = player1;
+    this.player1Name = gameRooms[roomCode].playerList.players[player1].name;
+    this.player2ID = player2;
+    this.player2Name = gameRooms[roomCode].playerList.players[player2].name;
+    this.answer1 = "";
+    this.answer2 = "";
+    this.answer1votes = 0;
+    this.answer2votes = 0;
+    this.alreadyshown = false;
+  }
       
-// }
+}
+
+class PromptList {
+  constructor(roomCode) {
+    this.prompts = {};
+    this.roomCode = roomCode;
+  }
+
+  get length() {
+    return Object.keys(this.prompts).length;
+  }
+
+}
 
 class PlayerList {
   // PlayerList handles all data and methods pertaining to the list of players
@@ -113,27 +142,28 @@ class PlayerList {
   }
 }
 
-    class Player {
-        // Player contains all data and methods pertaining to each individual player
-        constructor(id, roomCode) {
-            this.id = id;
-            this.roomCode = roomCode;
-            this.score = 0;
-            this.name = "";
-            this.playing = false;
-            this.ready = false;
-            this.voted = false;
-            this.canVote = true;
-            this.playerPicture = "";
-            this.playerID = 0;
-        }
-    }
+class Player {
+  // Player contains all data and methods pertaining to each individual player
+  constructor(id, roomCode) {
+    this.id = id;
+    this.roomCode = roomCode;
+    this.score = 0;
+    this.name = "";
+    this.playing = false;
+    this.ready = false;
+    this.voted = false;
+    this.canVote = true;
+    this.playerPicture = "";
+    this.playerID = 0;
+  }
+}
 
-io.on('connection', function(socket){
 
 //THIS IS WHERE ALL OF OUR SOCKET EMITS ONS AND INS ARE
 
-//   socket.emit('test', { hello: 'world' });
+io.on('connection', function(socket){
+
+  //   socket.emit('test', { hello: 'world' });
 
   console.log('a user connected with socket #' + socket.id);
   socket.emit('connected');
@@ -141,7 +171,7 @@ io.on('connection', function(socket){
   socket.on('disconnect', function(){
     console.log('User Disconnected');
   });
-  
+
   socket.on('create', (data) => {
     let roomCode;
 
@@ -238,6 +268,7 @@ io.on('connection', function(socket){
     console.log(playerKey);
 
     //here we're going to get some information about our intial players and push this to the game room
+    //there is probably a smaller way of doing this but this works for now
 
     while (iterator < playerKey.length)
     {
@@ -254,16 +285,74 @@ io.on('connection', function(socket){
       iterator++;
     }
 
-    gameRooms[roomCode].activePlayerKeys = playerBox;
+    gameRooms[roomCode].activePlayerKeys = playerBox; //Now our gameroom knows who's in there
 
     console.log (`Number of players: ${numPlayers}`);
-    console.log (`activeplayers: ${playerBox}`);
+    // console.log (`activeplayers: ${playerBox}`);
   
-    console.log(numPlayers);
-  })
+    //Now we're going to fill an array up to match the same number of active players
 
-  //Here's the function to create my roomcode
+    let promptBox = [];
+
+      while(promptBox.length < playerBox.length) {
+        let randNum = Math.floor(Math.random() * promptLib.length);
+
+        if(!promptLib[randNum].asked) {
+          promptBox.push(promptLib[randNum].prompt);
+          promptLib[randNum].asked=true;
+        }
+      }
+
+      console.log(`Our prompts: ${promptBox}`);
+
+      //And here we're going to start making our prompt objects from our GamePrompt constructor
+
+      console.log(`Number of players: ${numPlayers}`);
+      console.log(`Length of PromptBox: ${promptBox.length}`);
+
+
+      // let pArray = [];
+
+      for(x=0; x < promptBox.length; x++) {
+        
+        let borfTest = numPlayers-1;
+        console.log(borfTest);
+
+
+        if (x == borfTest) {
+
+          gameRooms[roomCode].addPromptToRoom(promptBox[x], playerBox[x].id, playerBox[0].id, roomCode, x);
+          console.log(`inserting as last prompt`);
+          console.log(`prb: ${promptBox[x]}, pl1: ${playerBox[x].id}, pl2: ${playerBox[0].id}`)
+
+        } else {
+
+          gameRooms[roomCode].addPromptToRoom(promptBox[x], playerBox[x].id, playerBox[x+1].id, roomCode, x);
+          console.log(`inserting as a prompt`);
+          console.log(`prb: ${promptBox[x]}, pl1: ${playerBox[x].id}, pl2: ${playerBox[x+1].id}`)
+        }
+      }
+
+      // gameRooms[roomCode].prompts.push(pArray);
+      
+      //  this is what I get for building this one the wrong day lol
+
+        console.log(gameRooms[roomCode]);
+      //   console.log(`This is what gameRoom's prompt 0 looks like: ${gameRooms[roomCode].promptList.prompts[0].prompt}`)
+      //   console.log(`This is what gameRoom's prompt 1 looks like: ${gameRooms[roomCode].promptList.prompts[1].prompt}`)
+      //   console.log(`This is what gameRoom's prompt 0's player1Name looks like: ${gameRooms[roomCode].promptList.prompts[0].player1Name}`)
+      //   console.log(`This is what gameRoom's prompt 0's player2Name looks like: ${gameRooms[roomCode].promptList.prompts[0].player2Name}`)
+      //   console.log(`This is what gameRoom's prompt 1's player1Name looks like: ${gameRooms[roomCode].promptList.prompts[1].player1Name}`)
+      //   console.log(`This is what gameRoom's prompt 1's player2Name looks like: ${gameRooms[roomCode].promptList.prompts[1].player2Name}`)
+      //   console.log(`This is what gameRoom's prompt 0's player1id looks like: ${gameRooms[roomCode].promptList.prompts[0].player1ID}`)
+      //   console.log(`This is what gameRoom's prompt 0's player2id looks like: ${gameRooms[roomCode].promptList.prompts[0].player2ID}`)
+      //   console.log(`This is what gameRoom's prompt 1's player1id looks like: ${gameRooms[roomCode].promptList.prompts[1].player1ID}`)
+      //   console.log(`This is what gameRoom's prompt 1's player2id looks like: ${gameRooms[roomCode].promptList.prompts[1].player2ID}`)
+    })
+
+  // Here's the function to create my roomcode
   // generates a random 5-digit alphanumeric room code for players to join
+  // Using five characters gives us something like 11881375 combinations, so we're more likely to crash a server before running out of rooms
     function roomCodeGen() {
 
         let roomCode = '';
