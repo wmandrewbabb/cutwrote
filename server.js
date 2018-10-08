@@ -59,6 +59,7 @@ class GameRoom {
     this.playerList = new PlayerList(roomCode);
     this.currentScreen = "lobby";
     this.prompts = [];
+    this.activePlayerKeys = [];
   }
         
         // adds a player to the room
@@ -236,6 +237,8 @@ io.on('connection', function(socket){
 
     console.log(playerKey);
 
+    //here we're going to get some information about our intial players and push this to the game room
+
     while (iterator < playerKey.length)
     {
       let iv = playerKey[iterator];
@@ -251,15 +254,12 @@ io.on('connection', function(socket){
       iterator++;
     }
 
-    // console.log(`Player in [0]: ${Object.keys(gameRooms[roomCode].playerList.players)}`);
+    gameRooms[roomCode].activePlayerKeys = playerBox;
+
     console.log (`Number of players: ${numPlayers}`);
     console.log (`activeplayers: ${playerBox}`);
   
-
-    // gameRooms[roomCode].playerList.players.filter(x => x.playing).length;
     console.log(numPlayers);
-
-
   })
 
   //Here's the function to create my roomcode

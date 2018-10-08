@@ -68,7 +68,7 @@ class App extends Component {
     socket.connect();
 
     socket.on('connected', (data) => {
-        console.log('connected');
+        console.log(`connected as ${socket.id}`);
     })
 
     socket.on('update players', (data) => {
