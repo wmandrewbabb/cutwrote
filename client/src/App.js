@@ -98,6 +98,15 @@ class App extends Component {
         console.log("Player Count: " + this.state.playerCount);
     });
 
+    socket.on('game progress update', (data) => {
+      this.setState({
+        players: data.players,
+        prompts: data.prompts,
+      });
+      console.log(data.players);
+      console.log(data.prompts);
+    });
+
     socket.on('room created', (data) => {
 
       console.log("New Room Created! Code: " + data.roomCode);
@@ -201,12 +210,12 @@ class App extends Component {
   figureOutIndividualPrompts() {
 
     for (var x=0; x < this.state.prompts.length; x++) {
-      if (this.state.prompts[x].player1ID == socket.id) {
+      if (this.state.prompts[x].player1ID === socket.id) {
         this.setState({
             firstPrompt: x
           });
          }
-      if (this.state.prompts[x].player2ID == socket.id) {
+      if (this.state.prompts[x].player2ID === socket.id) {
         this.setState({
             secondPrompt: x
           });

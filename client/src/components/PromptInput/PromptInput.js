@@ -1,6 +1,7 @@
 import React from "react";
 import PromptBox from "../../components/PromptBox";
 import TextField from '@material-ui/core/TextField';
+import "./PromptInput.css";
 
 
 const PromptInput = (props) => (
@@ -8,50 +9,58 @@ const PromptInput = (props) => (
         {props.promptsSubmitted === false &&
         <div>
             {props.onePromptSubmitted === false && 
-                <div>
+                <div className="d-flex row w-100 justify-content-center align-items-center" id="fixMarginBox">
                     <PromptBox 
                         currentPrompt = {props.currentPrompt}
                     />
                     <div className = "d-flex row w-75 justify-content-center align-items-center">
-                        <form className='inputPrompts' noValidate autoComplete="off" onSubmit={props.sendFirstPrompt}>
+                        <form className='inputPrompts w-100' noValidate autoComplete="off" onSubmit={props.sendFirstPrompt}>
                             <TextField
-                                inputProps={{
-                                    maxLength:70,
-                                }}
                                 id="firstPromptText"
-                                label="firstPromptText"
+                                style={{ margin: 8 }}
+                                placeholder="Your First Answer"
+                                helperText="70 characters max"
                                 className="promptInputField"
                                 value={props.firstPromptText}
                                 onChange={props.handleChange}
+                                fullWidth
                                 margin="normal"
+                                variant="filled"
                                 type="text"
                                 name="firstPromptText"
-                                fullWidth
+                                InputLabelProps={{
+                                    shrink: true,
+                                    maxLength:70,
+                                }}
                             />
                         </form>
                     </div>
                 </div>    
             }
             {props.onePromptSubmitted === true && 
-                <div>
+                <div className="d-flex row w-100 justify-content-center align-items-center">
                     <PromptBox 
                         currentPrompt = {props.currentPrompt}
                     />
                     <div className = "d-flex row w-75 justify-content-center align-items-center">
                         <form className='inputPrompts' noValidate autoComplete="off" onSubmit={props.sendSecondPrompt}>
                             <TextField
-                                inputProps={{
-                                    maxLength:70,
-                                }}
                                 id="secondPromptText"
-                                label="secondPromptText"
+                                style={{ margin: 8 }}
+                                placeholder="Your Second Answer"
+                                helperText="70 characters max"
                                 className="promptInputField"
                                 value={props.secondPromptText}
                                 onChange={props.handleChange}
+                                fullWidth
                                 margin="normal"
+                                variant="filled"
                                 type="text"
                                 name="secondPromptText"
-                                fullWidth
+                                InputLabelProps={{
+                                    shrink: true,
+                                    maxLength:70,
+                                }}
                             />
                         </form>
                     </div>

@@ -88,7 +88,7 @@ class GamePrompt {
     this.player2Name = gameRooms[roomCode].playerList.players[player2].name;
     this.answer1 = "";
     this.answer2 = "";
-    this.answer1Vtes = 0;
+    this.answer1Votes = 0;
     this.answer2Votes = 0;
     this.alreadyshown = false;
   }
@@ -277,12 +277,46 @@ io.on('connection', function(socket){
   })
 
   socket.on('firstPromptSent', (data) => {
-    console.log(data.firstPrompt);
+
+    let firstPrompt = data.firstPrompt;
+    let roomCode = data.roomCode;
+
+    for(let x=0; x< gameRooms[roomCode].promptList.length; x++)
+    {
+      if(gameRooms[roomCode].promptList.prompts[x].player1ID == socket.id){
+        gameRooms[roomCode].promptList.prompts[x].answer1 = firstPrompt;
+      }
+    }
+
+    io.sockets.in(roomCode).emit('game progress update', { 
+      players: gameRooms[roomCode].playerList.prepareToSend(), 
+      prompts: gameRooms[roomCode].promptList.preparePrompts(),
+    });
 
   });
 
   socket.on('secondPromptSent', (data) => {
     console.log(data.secondPrompt);
+
+    
+    let secondPrompt = data.secondPrompt;
+    let roomCode = data.roomCode;
+
+    for(let x=0; x< gameRooms[roomCode].promptList.length; x++)
+    {
+
+      if(gameRooms[roomCode].promptList.prompts[x].player2ID == socket.id){
+        gameRooms[roomCode].promptList.prompts[x].answer2 = secondPrompt;
+      }
+    }
+
+    io.sockets.in(roomCode).emit('game progress update', { 
+      players: gameRooms[roomCode].playerList.prepareToSend(), 
+      prompts: gameRooms[roomCode].promptList.preparePrompts(),
+    });
+
+    gameRooms[roomCode].playerList.players[socket.id].ready = true;
+
   });
 
   socket.on("startGame", (data) => {
