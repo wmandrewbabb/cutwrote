@@ -52,6 +52,11 @@ class App extends Component {
       showFooter: false,
       firstPrompt: -1,
       secondPrompt: -1,
+      currentPromptPos: -1,
+      firstPromptText: "",
+      secondPromptText: "",
+      onePromptSubmitted: false,
+      promptsSubmitted: false,
     }
 
     this.createGame = this.createGame.bind(this);
@@ -62,6 +67,11 @@ class App extends Component {
     this.startGame = this.startGame.bind(this);
     this.proceed = this.proceed.bind(this);
     this.figureOutIndividualPrompts = this.figureOutIndividualPrompts.bind(this);
+    this.sendFirstPrompt = this.sendFirstPrompt.bind(this);
+    this.sendSecondPrompt = this.sendSecondPrompt.bind(this);
+    // this.sendVote = this.sendVote.bind(this);
+    // this.handleWinners = this.handleWinners.bind(this);
+    // this.sortScores = this.sortScores.bind(this);
 
   } 
 
@@ -162,7 +172,7 @@ class App extends Component {
   startGame() {
     console.log("You're starting a game!");
     if(this.state.playerCount > 1) { //We're going to set this to 1 for testing purposes, it should be 2
-      socket.emit('startGame', {roomCode:this.state.codeInput})
+      socket.emit('startGame', {roomCode:this.state.codeInput});
     } else {
       console.log("Not enough players yet!");
     }
@@ -179,7 +189,7 @@ class App extends Component {
     e.preventDefault();
     if (this.state.playerCount < 8) {
       console.log(`${this.state.name} is taking a seat at the game in room ${this.state.roomCode}`);
-      socket.emit('takingSeat', {name: this.state.name, roomCode: this.state.roomCode})
+      socket.emit('takingSeat', {name: this.state.name, roomCode: this.state.roomCode});
       this.setState({
         playing: true,
       })
@@ -194,20 +204,43 @@ class App extends Component {
       if (this.state.prompts[x].player1ID == socket.id) {
         this.setState({
             firstPrompt: x
-          })
+          });
          }
       if (this.state.prompts[x].player2ID == socket.id) {
         this.setState({
             secondPrompt: x
-          })
+          });
         } 
     }
+
+    this.setState({
+        currentPromptPos: this.state.firstPrompt
+    });
 
     console.log(`This is the position of the first prompt: ${this.state.firstPrompt}`);
     console.log(`This is the first prompt: ${this.state.prompts[this.state.firstPrompt].prompt}`);
     console.log(`This is the position of the second prompt: ${this.state.secondPrompt}`);
     console.log(`This is the second prompt: ${this.state.prompts[this.state.secondPrompt].prompt}`);
   }
+
+
+  sendFirstPrompt() {
+    console.log(this.state.firstPromptText);
+    this.setState({
+      onePromptSubmitted: true,
+      currentPromptPos: this.state.secondPrompt
+    });
+    socket.emit("firstPromptSent", {roomCode: this.state.roomCode, firstPrompt: this.state.firstPromptText});
+  }
+
+  sendSecondPrompt() {
+    console.log(this.state.secondPromptText);
+    this.setState({
+      promptsSubmitted: true
+    })
+    socket.emit("secondPromptSent", {roomCode: this.state.roomCode, secondPrompt: this.state.secondPromptText});
+  }
+
 
   setMessage(message, type = null, timeout = 2000) {
     switch(type) {
@@ -288,6 +321,11 @@ class App extends Component {
       showFooter,
       firstPrompt,
       secondPrompt,
+      firstPromptText,
+      secondPromptText,
+      onePromptSubmitted,
+      promptsSubmitted,
+      currentPromptPos,
     } = this.state;
 
     return(
@@ -333,13 +371,21 @@ class App extends Component {
                 playing={playing}
               />
             </div>}
-            {currentScreen === 'readyset' &&
-              <ReadySetGo />
-            }
+          {currentScreen === 'readyset' &&
+            <ReadySetGo />
+          }
           {currentScreen === 'prompts' &&
             <div>
               <PromptInput
-                currentPrompt={this.state.prompts[this.state.firstPrompt].prompt} />
+                firstPromptText={firstPromptText}
+                secondPromptText={secondPromptText}
+                onePromptSubmitted={onePromptSubmitted}
+                promptsSubmitted={promptsSubmitted}
+                sendFirstPrompt={this.sendFirstPrompt}
+                sendSecondPrompt={this.sendSecondPrompt}
+                handleChange={this.handleChange}
+                currentPrompt={this.state.prompts[this.state.currentPromptPos].prompt} 
+              />
             </div>}  
           {/*{currentScreen === 'game' &&
             <div>

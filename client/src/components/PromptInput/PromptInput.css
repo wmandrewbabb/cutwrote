@@ -1,0 +1,10 @@
+.promptInputField {
+    /* width: 100%!important; */
+    border-radius: 5px;
+    border: solid;
+    border-color: #000;
+    border-width: 2px;
+    height: 24pt;
+    font-size: 18pt;
+    font-family: 'Love Ya Like A Sister', cursive;
+}

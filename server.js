@@ -276,6 +276,15 @@ io.on('connection', function(socket){
     });
   })
 
+  socket.on('firstPromptSent', (data) => {
+    console.log(data.firstPrompt);
+
+  });
+
+  socket.on('secondPromptSent', (data) => {
+    console.log(data.secondPrompt);
+  });
+
   socket.on("startGame", (data) => {
     console.log(`Starting game in room ${data.roomCode}`);
     let roomCode = data.roomCode;
@@ -377,7 +386,7 @@ io.on('connection', function(socket){
       //   console.log(`This is what gameRoom's prompt 0's player2id looks like: ${gameRooms[roomCode].promptList.prompts[0].player2ID}`)
       //   console.log(`This is what gameRoom's prompt 1's player1id looks like: ${gameRooms[roomCode].promptList.prompts[1].player1ID}`)
       //   console.log(`This is what gameRoom's prompt 1's player2id looks like: ${gameRooms[roomCode].promptList.prompts[1].player2ID}`)
-    })
+    });
 
   // Here's the function to create my roomcode
   // generates a random 5-digit alphanumeric room code for players to join
