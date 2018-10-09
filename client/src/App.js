@@ -12,7 +12,7 @@ import ReadyButton from "./components/ReadyButton";
 import ReadySetGo from "./components/ReadySetGo";
 // import TransitionSlide from "./components/TransitionSlide"
 // import Prompt from "./components/Prompt";
-// import PromptInput from "./components/PromptInput";
+import PromptInput from "./components/PromptInput";
 // import Votes from "./components/Votes";
 // import ScoreScreen from "./components/ScoreScreen";
 // import FinalScore from "./components/FinalScore";
@@ -50,6 +50,8 @@ class App extends Component {
       multiline: 'Controlled',
       playerCount: 0,
       showFooter: false,
+      firstPrompt: -1,
+      secondPrompt: -1,
     }
 
     this.createGame = this.createGame.bind(this);
@@ -59,6 +61,8 @@ class App extends Component {
     this.checkNumberofPlayers = this.checkNumberofPlayers.bind(this);
     this.startGame = this.startGame.bind(this);
     this.proceed = this.proceed.bind(this);
+    this.figureOutIndividualPrompts = this.figureOutIndividualPrompts.bind(this);
+
   } 
 
   componentDidMount() {
@@ -127,19 +131,13 @@ class App extends Component {
         currentScreen: newScreen,
       })
 
-
-      // if(startTimer) {
-      //   clearTimeout(startTimer);
-      // }
+      this.figureOutIndividualPrompts();
       
       setTimeout(() => { 
         this.setState({
-          currentScreen: 'prompt1'
+          currentScreen: 'prompts'
         })
        }, 7000);
-
-
-      
       // this.checkNumberofPlayers();
       })
   }
@@ -185,10 +183,30 @@ class App extends Component {
       this.setState({
         playing: true,
       })
-      // this.state.playing = true;
     } else {
       console.log('TOO MANY PLAYERS');
     }
+  }
+
+  figureOutIndividualPrompts() {
+
+    for (var x=0; x < this.state.prompts.length; x++) {
+      if (this.state.prompts[x].player1ID == socket.id) {
+        this.setState({
+            firstPrompt: x
+          })
+         }
+      if (this.state.prompts[x].player2ID == socket.id) {
+        this.setState({
+            secondPrompt: x
+          })
+        } 
+    }
+
+    console.log(`This is the position of the first prompt: ${this.state.firstPrompt}`);
+    console.log(`This is the first prompt: ${this.state.prompts[this.state.firstPrompt].prompt}`);
+    console.log(`This is the position of the second prompt: ${this.state.secondPrompt}`);
+    console.log(`This is the second prompt: ${this.state.prompts[this.state.secondPrompt].prompt}`);
   }
 
   setMessage(message, type = null, timeout = 2000) {
@@ -268,6 +286,8 @@ class App extends Component {
       playerCount,
       playing,
       showFooter,
+      firstPrompt,
+      secondPrompt,
     } = this.state;
 
     return(
@@ -316,12 +336,12 @@ class App extends Component {
             {currentScreen === 'readyset' &&
               <ReadySetGo />
             }
-          {/*{currentScreen === 'prompts' &&
+          {currentScreen === 'prompts' &&
             <div>
-              <Prompt />
-              <PromptInput />
+              <PromptInput
+                currentPrompt={this.state.prompts[this.state.firstPrompt].prompt} />
             </div>}  
-          {currentScreen === 'game' &&
+          {/*{currentScreen === 'game' &&
             <div>
               <PromptGame />
               <Votes />

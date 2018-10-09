@@ -10,7 +10,7 @@ class ReadySetGo extends Component {
   
     componentDidMount() {
       this.setItOff();
-      console.log(this.props);
+    //   console.log(this.props);
     }
 
     // nextcard = () => {
