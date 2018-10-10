@@ -14,7 +14,6 @@ import ReadySetGo from "./components/ReadySetGo";
 // import TransitionSlide from "./components/TransitionSlide"
 // import Prompt from "./components/Prompt";
 import PromptInput from "./components/PromptInput";
-import JoinRedirect from "./components/JoinRedirect";
 // import Votes from "./components/Votes";
 // import ScoreScreen from "./components/ScoreScreen";
 // import FinalScore from "./components/FinalScore";

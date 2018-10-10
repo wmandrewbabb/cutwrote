@@ -7,6 +7,7 @@ const app = express();
 const server = require('http').createServer(app);
 const port = process.env.PORT || 3001;
 const io = require('socket.io')(server);
+var path = require('path');
 
 app.use(logger('dev'));
 app.use(express.static(`${__dirname}/public`));
@@ -22,14 +23,6 @@ app.use(bodyParser.json());
 // Serve up static assets (usually on heroku) 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
-}
-// Add routes, both API and view
-// app.use(routes);
-
-// Socket.io
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
   app.get("/*", function(req, res) {
     res.sendFile(path.join(__dirname, "./client/build/index.html"));
   });
@@ -41,6 +34,16 @@ else {
     res.sendFile(path.join(__dirname, "./client/public/index.html"));
   });
 }
+// Add routes, both API and view
+// app.use(routes);
+
+// Socket.io
+
+// app.get('*', (req,res) =>{
+//   res.sendFile(path.join(__dirname+'/client/build/index.html'));
+// });
+
+
 
 // const Sockets= require('./serverSockets.js');
 
