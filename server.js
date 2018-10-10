@@ -28,6 +28,10 @@ if (process.env.NODE_ENV === "production") {
 
 // Socket.io
 
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+
 // const Sockets= require('./serverSockets.js');
 
 const gameRooms = {};
