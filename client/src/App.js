@@ -328,8 +328,8 @@ class App extends Component {
   }
 
 
-  sendFirstPrompt(e) {
-    e.preventDefault();
+  sendFirstPrompt() {
+    // e.preventDefault();
     console.log(this.state.firstPromptText);
     this.setState({
       onePromptSubmitted: true,
@@ -338,8 +338,8 @@ class App extends Component {
     socket.emit("firstPromptSent", {roomCode: this.state.roomCode, firstPrompt: this.state.firstPromptText});
   }
 
-  sendSecondPrompt(e) {
-    e.preventDefault();
+  sendSecondPrompt() {
+    // e.preventDefault();
 
     console.log(this.state.secondPromptText);
     this.setState({

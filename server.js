@@ -78,7 +78,7 @@ class GameRoom {
     this.promptList = new PromptList(roomCode);
     this.activePlayerKeys = [];
     this.currentRound = 0;
-    this.timer;
+    this.setTimeout;
   }
         
         // adds a player to the room
@@ -433,12 +433,13 @@ io.on('connection', function(socket){
       console.log("everyone's ready");
 
         gameRooms[roomCode].currentRound++;
-        
+
         io.sockets.in(roomCode).emit('start voting', {
           gameRound: gameRooms[roomCode].currentRound,
         });
 
         gameRooms[roomCode].currentScreen = "votingRounds";
+        clearInterval(gameRooms[roomCode].setTimeout);
 
     } else {
       console.log("waiting on someone still");
@@ -465,8 +466,11 @@ io.on('connection', function(socket){
         gameRound: gameRooms[roomCode].currentRound,
       });
 
-      io.sockets.in(roomCode).emit('start voting');
-      gameRooms[roomCode].currentScreen = "votingRounds";
+        io.sockets.in(roomCode).emit('start voting', {
+          gameRound: gameRooms[roomCode].currentRound,
+        });
+        
+        gameRooms[roomCode].currentScreen = "votingRounds";
 
     }, 180000);
 
