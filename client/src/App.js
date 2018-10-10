@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import SplashTitle from "./components/SplashTitle";
 import FrontInput from "./components/Frontinput";
 import Nav from "./components/Nav";
@@ -13,6 +14,7 @@ import ReadySetGo from "./components/ReadySetGo";
 // import TransitionSlide from "./components/TransitionSlide"
 // import Prompt from "./components/Prompt";
 import PromptInput from "./components/PromptInput";
+import JoinRedirect from "./components/JoinRedirect";
 // import Votes from "./components/Votes";
 // import ScoreScreen from "./components/ScoreScreen";
 // import FinalScore from "./components/FinalScore";
@@ -57,6 +59,7 @@ class App extends Component {
       secondPromptText: "",
       onePromptSubmitted: false,
       promptsSubmitted: false,
+      joinFromRedirect: false,
     }
 
     this.createGame = this.createGame.bind(this);
@@ -75,18 +78,41 @@ class App extends Component {
 
   } 
 
+  componentDidUpdate() {
+    setTimeout(function(){ socket.connect();}, 1000);
+
+
+    socket.on('connected', (data) => {
+
+        console.log(`connected as ${socket.id}`);
+
+        if (this.state.joinFromRedirect) {
+          this.joinGameFromRedirect(this.props.match.params.id);
+        } 
+
+    })
+  }
+
   componentDidMount() {
+
+    // console.log(`connected as ${socket.id}`);
+    if (this.props.match.params.id === undefined) {
+      console.log("Undefined param");
+      console.log(this.state.joinFromRedirect);
+
+      console.log(this.props.match.params.id);
+    } else {
+      console.log(this.props.match.params.id);
+      this.setState({joinFromRedirect: true})
+      console.log(this.state.joinFromRedirect);
+    }
+
+
 
     //ALL OF OUR GODDAMN SOCKETS LIVE HERE
     //Why am I mad? Because I'm an idiot that tried loading this individually on each component and learned the hard way
     //that loading them that way is 1) a mess and 2) a bad idea and 3) leads to problems
     //Thanks stackoverflow for telling me that I was dumb way before documentation did
-
-    socket.connect();
-
-    socket.on('connected', (data) => {
-        console.log(`connected as ${socket.id}`);
-    })
 
     socket.on('update players', (data) => {
         console.log('updating player list');
@@ -127,6 +153,9 @@ class App extends Component {
 
     socket.on("room joined", (data) => {
       console.log("Joining room! Room: " + data.roomCode);
+      this.setState({
+        roomCode: data.roomCode
+      });
       this.setState((prevState) => {
         let newCurrentScreen;
         if (prevState.currentScreen === 'home') {
@@ -172,16 +201,35 @@ class App extends Component {
   joinGame(e) {
     console.log("Attempting to join game: " + this.state.codeInput);
     e.preventDefault();
-    if (this.state.codeInput.length > 0 && this.state.codeInput.length === 5) {
-      console.log(`joining game ${this.state.codeInput}`);
-      socket.emit('join', {roomCode: this.state.codeInput});
-    } 
+    console.log(this.state.joinFromRedirect);
+    if(this.state.joinFromRedirect == false)
+    {
+      if (this.state.codeInput.length > 0 && this.state.codeInput.length === 5) {
+        console.log(`joining game ${this.state.codeInput}`);
+        socket.emit('join', {roomCode: this.state.codeInput});
+       } 
+    }
+  }
+
+  joinGameFromRedirect(roomCode) {
+    console.log("sees outside");
+    function ham() {
+      console.log("sees inside");
+      console.log(roomCode.length);
+      if (roomCode.length > 0 && roomCode.length === 5) {
+        // console.log("Attempting to join game: " + roomCode);
+        console.log(`joining game ${roomCode}`);
+        socket.emit('joinRedirect', {roomCode: roomCode});
+      } 
+    }
+
+    ham();
   }
 
   startGame() {
     console.log("You're starting a game!");
     if(this.state.playerCount > 1) { //We're going to set this to 1 for testing purposes, it should be 2
-      socket.emit('startGame', {roomCode:this.state.codeInput});
+      socket.emit('startGame', {roomCode: this.state.roomCode});
     } else {
       console.log("Not enough players yet!");
     }
@@ -233,7 +281,8 @@ class App extends Component {
   }
 
 
-  sendFirstPrompt() {
+  sendFirstPrompt(e) {
+    e.preventDefault();
     console.log(this.state.firstPromptText);
     this.setState({
       onePromptSubmitted: true,
@@ -242,7 +291,9 @@ class App extends Component {
     socket.emit("firstPromptSent", {roomCode: this.state.roomCode, firstPrompt: this.state.firstPromptText});
   }
 
-  sendSecondPrompt() {
+  sendSecondPrompt(e) {
+    e.preventDefault();
+
     console.log(this.state.secondPromptText);
     this.setState({
       promptsSubmitted: true
@@ -304,6 +355,7 @@ class App extends Component {
       [name]: value
     })
   };
+
 
   //ACTUALLY RENDER ALL MY DAMN COMPONENTS
   
@@ -373,6 +425,7 @@ class App extends Component {
               />
               <PlayerList 
                 players={players}
+                currentScreen={currentScreen}
               />
               <ReadyButton 
                 playerCount={playerCount}
@@ -395,6 +448,10 @@ class App extends Component {
                 handleChange={this.handleChange}
                 currentPrompt={this.state.prompts[this.state.currentPromptPos].prompt} 
               />
+              <PlayerList 
+                players={players}
+                currentScreen={currentScreen}
+              />
             </div>}  
           {/*{currentScreen === 'game' &&
             <div>
@@ -411,11 +468,7 @@ class App extends Component {
               <SaveGame />
               <ReturntoStartButton />
             </div>}     */}
-
-        </div>
-
-
-
+      </div>
     )
 
   }

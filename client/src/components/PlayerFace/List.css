@@ -45,7 +45,7 @@
   height: auto;
 }
 
-.playerFaceDiv p {
+.nameText {
   /* align-content: center; 
   justify-content: center; */
   font-family: 'Alfa Slab One', cursive;
@@ -56,6 +56,18 @@
   float: none;
   font-size: 100%;
   /* display: unset; */
+}
+
+.readyExclamation {
+  font-family: 'Alfa Slab One', cursive;
+  text-align: center;
+  text-shadow: 1px 1px 0px  #fff, -1px -1px 0px  #fff, 1px -1px 0px  #fff, -1px 1px 0px  #fff;
+  top: 25px;
+  position: relative;
+  float: none;
+  font-size: 300%;
+  color: orangered;
+  height: 1.5rem;
 }
 
 .playerFaceContainer {

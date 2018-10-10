@@ -15,8 +15,10 @@ export const PlayerList = props => {
                   {props.players.filter(x => x.playing).map(x => (
                          <ListItem key={x.id}>
                          <div className="crushPic">
+                            {props.currentScreen === 'prompts' &&
+                            <div>{x.ready ? (<p className="readyExclamation">!</p>) : (<p className="readyExclamation">?</p>)}</div>}
                             <img src={x.playerPicture} alt={x.name}></img>
-                            <p>{x.name}</p>
+                            <p className="nameText">{x.name}</p>
                          </div>
                          </ListItem>  
                   )

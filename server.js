@@ -61,6 +61,7 @@ class GameRoom {
     this.promptList = new PromptList(roomCode);
     this.activePlayerKeys = [];
     this.currentRound = 0;
+    this.timer;
   }
         
         // adds a player to the room
@@ -162,6 +163,29 @@ class PlayerList {
         
     return playersPackaged;
   }
+
+  timeOut() {
+
+    let playersPackaged = [];
+        
+    for (let id in this.players) {
+      playersPackaged.push({
+        id: id,
+        roomCode: this.players[id].roomCode, 
+        score: this.players[id].score,
+        name: this.players[id].name,
+        playing: this.players[id].playing,
+        ready: true,
+        voted: this.players[id].voted,
+        canVote: this.players[id].canVote,
+        playerPicture: this.players[id].playerPicture,
+        playerID: this.players[id].playerID,
+      });
+    }
+        
+    return playersPackaged;
+  }
+
 }
 
 class Player {
@@ -254,6 +278,38 @@ io.on('connection', function(socket){
     }
   });
 
+  socket.on('joinRedirect', (data) => {
+    let roomCode = data.roomCode.toUpperCase();
+    console.log("getting a redirect to join room " + data.roomCode);
+
+    if (gameRooms[roomCode]) {
+
+      const { playerList} = gameRooms[roomCode];
+
+      socket.join(roomCode);
+      gameRooms[roomCode].addToRoom(socket.id);
+
+      io.sockets.in(roomCode).emit('update players', { 
+        players: playerList.prepareToSend(), 
+        // joiningPlayer: data.name 
+      });
+
+      socket.emit('room joined', {
+        roomCode,
+      });
+
+      console.log(gameRooms[roomCode]);
+
+
+  } else {
+    // no gameroom exists for that room code
+    socket.emit('bad roomcode');
+    console.log("bad roomcode");
+  }
+
+
+  })
+
   socket.on('takingSeat', (data) => {
     console.log("Getting a request to take seat from " + data.name + " in room " + data.roomCode);
     let name = data.name;
@@ -310,6 +366,9 @@ io.on('connection', function(socket){
       }
     }
 
+    gameRooms[roomCode].playerList.players[socket.id].ready = true;
+    
+
     io.sockets.in(roomCode).emit('game progress update', { 
       players: gameRooms[roomCode].playerList.prepareToSend(), 
       prompts: gameRooms[roomCode].promptList.preparePrompts(),
@@ -324,6 +383,23 @@ io.on('connection', function(socket){
     let roomCode = data.roomCode;
 
     gameRooms[roomCode].currentScreen = "firstTransition";
+
+
+    //This is a failsafe in case someone does something dumb like tabs out and the tab goes inactive and never returns anything
+    gameRooms[roomCode].setTimeout = setTimeout( ()=> {
+
+      console.log("the room has timed out");
+
+      io.sockets.in(roomCode).emit('game progress update', { 
+        players: gameRooms[roomCode].playerList.timeOut(),
+        prompts: gameRooms[roomCode].promptList.preparePrompts(),
+      });
+
+      io.sockets.in(roomCode).emit('start voting');
+      gameRooms[roomCode].currentScreen = "votingRounds";
+
+    }, 180000);
+
 
     let numPlayers = 0;
     let iterator = 0;

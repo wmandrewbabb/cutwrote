@@ -6,7 +6,6 @@ import "./PromptInput.css";
 
 const PromptInput = (props) => (
     <div className="w-100">
-        {props.promptsSubmitted === false &&
         <div>
             {props.onePromptSubmitted === false && 
                 <div className="d-flex row w-100 justify-content-center align-items-center" id="fixMarginBox">
@@ -38,7 +37,7 @@ const PromptInput = (props) => (
                 </div>    
             }
             {props.onePromptSubmitted === true && 
-                <div className="d-flex row w-100 justify-content-center align-items-center">
+                <div className={props.promptsSubmitted ? ("d-flex row w-100 justify-content-center align-items-center invisible") : ("d-flex row w-100 justify-content-center align-items-center")}>
                     <PromptBox 
                         currentPrompt = {props.currentPrompt}
                     />
@@ -65,9 +64,8 @@ const PromptInput = (props) => (
                         </form>
                     </div>
                 </div>    
-            }     
+            }
         </div>
-        }
                    
     </div>
 );
