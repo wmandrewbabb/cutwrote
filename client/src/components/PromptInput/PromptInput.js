@@ -2,6 +2,7 @@ import React from "react";
 import PromptBox from "../../components/PromptBox";
 import TextField from '@material-ui/core/TextField';
 import "./PromptInput.css";
+import Timer from "../../components/Timer";
 
 
 const PromptInput = (props) => (
@@ -32,6 +33,10 @@ const PromptInput = (props) => (
                                     maxLength:70,
                                 }}
                             />
+                            <Timer
+                                secondsRemaining={45}
+                                onCompletion={props.sendFirstPrompt}
+                            />
                         </form>
                     </div>
                 </div>    
@@ -60,6 +65,10 @@ const PromptInput = (props) => (
                                     shrink: true,
                                     maxLength:70,
                                 }}
+                            />
+                            <Timer
+                                secondsRemaining={45}
+                                onCompletion={props.sendSecondPrompt}
                             />
                         </form>
                     </div>

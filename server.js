@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 else {
-  app.use(express.static(path.join(__dirname, '/client/public')));
+  app.use(express.static(path.join(__dirname, './client/public')));
   app.get("/*", function(req, res) {
     res.sendFile(path.join(__dirname, "./client/public/index.html"));
   });
@@ -92,6 +92,9 @@ class GameRoom {
 
   // removeFromRoom(id) {
       //this is going to be long
+      // const { roomCode, playerList, promptList, currentScreen, currentRound, activePlayerKeys } = this;
+      // const { players } = playerList;
+  
   // }
 
 }
@@ -117,6 +120,7 @@ class PromptList {
   constructor(roomCode) {
     this.prompts = {};
     this.roomCode = roomCode;
+    this.currentPromptIndex = 0;
   }
 
   get length() {
@@ -175,6 +179,7 @@ class PlayerList {
         canVote: this.players[id].canVote,
         playerPicture: this.players[id].playerPicture,
         playerID: this.players[id].playerID,
+        connected: this.players[id].connected,
       });
     }
         
@@ -218,6 +223,7 @@ class Player {
     this.canVote = true;
     this.playerPicture = "";
     this.playerID = 0;
+    this.connected = true; //I'm fairly certain I'm going to need this to prevent errors from popping up if an active player leaves during the game.
   }
 }
 
@@ -232,7 +238,15 @@ io.on('connection', function(socket){
   socket.emit('connected');
   
   socket.on('disconnect', function(){
-    console.log('User Disconnected');
+    console.log(socket.id + ' User Disconnected');
+    // for (let roomCode in gameRooms) {
+    //   let { players } = gameRooms[roomCode].playerList;
+
+    //   if (players[socket.id]) {
+    //     socket.leave(roomCode);
+    //     gameRooms[roomCode].removeFromRoom(socket.id);
+    //   }
+    // }
   });
 
   socket.on('create', (data) => {
@@ -364,6 +378,7 @@ io.on('connection', function(socket){
     io.sockets.in(roomCode).emit('game progress update', { 
       players: gameRooms[roomCode].playerList.prepareToSend(), 
       prompts: gameRooms[roomCode].promptList.preparePrompts(),
+      gameRound: gameRooms[roomCode].currentRound,
     });
 
   });
@@ -389,9 +404,46 @@ io.on('connection', function(socket){
     io.sockets.in(roomCode).emit('game progress update', { 
       players: gameRooms[roomCode].playerList.prepareToSend(), 
       prompts: gameRooms[roomCode].promptList.preparePrompts(),
+      gameRound: gameRooms[roomCode].currentRound,
     });
 
-    gameRooms[roomCode].playerList.players[socket.id].ready = true;
+    // gameRooms[roomCode].playerList.players[socket.id].ready = true;
+
+    console.log(`Active players : ${gameRooms[roomCode].activePlayerKeys.length}`)
+
+    let iterator = 0;
+    let playerKey = Object.keys(gameRooms[roomCode].playerList.players);
+    let checkPlayers = 0;
+
+    //here we're going to get some information about our intial players and push this to the game room
+    //there is probably a smaller way of doing this but this works for now
+
+    while (iterator < playerKey.length)
+    {
+      let iv = playerKey[iterator];
+      if (gameRooms[roomCode].playerList.players[iv].ready === true) 
+      {
+        checkPlayers++;
+      }
+    
+      iterator++;
+    }
+
+    if(gameRooms[roomCode].activePlayerKeys.length === checkPlayers) {
+      console.log("everyone's ready");
+
+        gameRooms[roomCode].currentRound++;
+        
+        io.sockets.in(roomCode).emit('start voting', {
+          gameRound: gameRooms[roomCode].currentRound,
+        });
+
+        gameRooms[roomCode].currentScreen = "votingRounds";
+
+    } else {
+      console.log("waiting on someone still");
+    }
+
 
   });
 
@@ -410,6 +462,7 @@ io.on('connection', function(socket){
       io.sockets.in(roomCode).emit('game progress update', { 
         players: gameRooms[roomCode].playerList.timeOut(),
         prompts: gameRooms[roomCode].promptList.preparePrompts(),
+        gameRound: gameRooms[roomCode].currentRound,
       });
 
       io.sockets.in(roomCode).emit('start voting');

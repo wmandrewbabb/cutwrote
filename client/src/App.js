@@ -14,6 +14,8 @@ import ReadySetGo from "./components/ReadySetGo";
 // import TransitionSlide from "./components/TransitionSlide"
 // import Prompt from "./components/Prompt";
 import PromptInput from "./components/PromptInput";
+import VotingRoundTransition from "./components/VotingRoundTransition";
+import VotingRound from "./components/VotingRound";
 // import Votes from "./components/Votes";
 // import ScoreScreen from "./components/ScoreScreen";
 // import FinalScore from "./components/FinalScore";
@@ -59,6 +61,11 @@ class App extends Component {
       onePromptSubmitted: false,
       promptsSubmitted: false,
       joinFromRedirect: false,
+      timer: null,
+      gameRound: 0,
+      votingFor: "",
+      hasVoted: false,
+      canVote: true,
     }
 
     this.createGame = this.createGame.bind(this);
@@ -71,14 +78,31 @@ class App extends Component {
     this.figureOutIndividualPrompts = this.figureOutIndividualPrompts.bind(this);
     this.sendFirstPrompt = this.sendFirstPrompt.bind(this);
     this.sendSecondPrompt = this.sendSecondPrompt.bind(this);
+    this.proceedToVotes = this.proceedToVotes.bind(this);
     // this.sendVote = this.sendVote.bind(this);
     // this.handleWinners = this.handleWinners.bind(this);
     // this.sortScores = this.sortScores.bind(this);
 
   } 
 
-  componentDidUpdate() {
-    setTimeout(function(){ socket.connect();}, 1000);
+  // componentDidUpdate() {
+  //   setTimeout(function(){ socket.connect();}, 1000);
+
+
+  //   socket.on('connected', (data) => {
+
+  //       console.log(`connected as ${socket.id}`);
+
+  //       if (this.state.joinFromRedirect) {
+  //         this.joinGameFromRedirect(this.props.match.params.id);
+  //       } 
+
+  //   })
+  // }
+
+  componentDidMount() {
+
+    socket.connect();
 
 
     socket.on('connected', (data) => {
@@ -90,9 +114,7 @@ class App extends Component {
         } 
 
     })
-  }
 
-  componentDidMount() {
 
     // console.log(`connected as ${socket.id}`);
     if (this.props.match.params.id === undefined) {
@@ -127,6 +149,7 @@ class App extends Component {
       this.setState({
         players: data.players,
         prompts: data.prompts,
+        gameRound: data.gameRound
       });
       console.log(data.players);
       console.log(data.prompts);
@@ -168,6 +191,31 @@ class App extends Component {
         }
       })
     });
+
+    socket.on("start voting", (data) => {
+      this.setState({
+        votingFor: "",
+        hasVoted: false,
+        canVote: true,
+      })
+
+      //Starting voting round!
+      let newScreen = 'votingTransition';
+      let newPromptPos = data.gameRound-1;
+
+      this.setState({
+        currentScreen: newScreen,
+        currentPromptPos: newPromptPos,
+        gameRound: data.gameRound,
+      })
+
+      if(this.state.prompts[this.state.currentPromptPos].player1ID === socket.id || this.state.prompts[this.state.currentPromptPos].player2ID === socket.id) {
+        console.log("Sorry! You can't vote on this one!");
+        this.setState({
+          canVote: false,
+        })
+      } 
+    })
 
     socket.on("start your game", (data) => {
       console.log("Going to screen transition!");
@@ -333,6 +381,14 @@ class App extends Component {
     })
   }
 
+  proceedToVotes() {
+    setTimeout(() => { 
+      this.setState({
+        currentScreen: 'voting'
+      })
+     }, 3000);
+  }
+
   toggleMenu() {
     this.setState((prevState) => {
       return {
@@ -386,6 +442,11 @@ class App extends Component {
       onePromptSubmitted,
       promptsSubmitted,
       currentPromptPos,
+      timer,
+      gameRound,
+      votingFor,
+      hasVoted,
+      canVote,
     } = this.state;
 
     return(
@@ -438,6 +499,7 @@ class App extends Component {
           {currentScreen === 'prompts' &&
             <div>
               <PromptInput
+                timer={this.timer}
                 firstPromptText={firstPromptText}
                 secondPromptText={secondPromptText}
                 onePromptSubmitted={onePromptSubmitted}
@@ -451,13 +513,29 @@ class App extends Component {
                 players={players}
                 currentScreen={currentScreen}
               />
-            </div>}  
-          {/*{currentScreen === 'game' &&
-            <div>
-              <PromptGame />
-              <Votes />
             </div>}
-          {currentScreen === 'score' &&
+          {currentScreen === 'votingTransition' &&
+              <VotingRoundTransition 
+                gameRound = {gameRound}
+                proceedToVotes = {this.proceedToVotes}
+              />
+          } 
+          {currentScreen === 'voting' &&
+            <div>
+              <VotingRound
+                currentPrompt={this.state.prompts[this.state.currentPromptPos].prompt} 
+                player1ID={this.state.prompts[this.state.currentPromptPos].player1ID} 
+                player2ID={this.state.prompts[this.state.currentPromptPos].player2ID} 
+                player1Name={this.state.prompts[this.state.currentPromptPos].player1Name} 
+                player2Name={this.state.prompts[this.state.currentPromptPos].player2Name} 
+                answer1={this.state.prompts[this.state.currentPromptPos].answer1} 
+                answer2={this.state.prompts[this.state.currentPromptPos].answer2} 
+                answer1Votes={this.state.prompts[this.state.currentPromptPos].answer1Votes} 
+                answer2Votes={this.state.prompts[this.state.currentPromptPos].answer2Votes} 
+              />
+              {/* <Votes /> */}
+            </div>}
+          {/*{currentScreen === 'score' &&
             <div>
               <ScoreScreen />
             </div>}
