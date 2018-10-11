@@ -452,7 +452,7 @@ class App extends Component {
     } = this.state;
 
     return(
-        <div className="h-100" fluid="true">
+        <div className="MainApp" fluid="true">
           <Nav name={name} roomCode={roomCode}/>
           {/* <BackgroundBokke /> */}
           {showPopup &&
@@ -464,7 +464,7 @@ class App extends Component {
             buttons={modalButtons}
           />}
           {currentScreen === 'home' && 
-            <div>
+            <div className="h-100 mainCapture">
               <SplashTitle />
               <FrontInput 
                 codeInput={codeInput}

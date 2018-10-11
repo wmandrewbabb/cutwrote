@@ -25,6 +25,7 @@ const BackgroundBokke = () => (
   <span style={{zIndex:-99}}></span>
   <span style={{zIndex:-99}}></span>
 </div>
+// </div>
 );
 
 export default BackgroundBokke;
