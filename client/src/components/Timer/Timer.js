@@ -19,7 +19,9 @@ tick = () => {
         this.setState({ idiotCountdown: passIn });
         if (this.state.idiotCountdown <= 0) {
           clearInterval(this.interval);
-          this.props.onCompletion();
+          if(this.props.onCompletion){
+            this.props.onCompletion();
+          }
         }
       }
 
@@ -37,7 +39,7 @@ componentWillUnmount () {
       <div className="row w-100">
         <span className="row w-100">
           <span className="timerText ml-auto">
-              <strong>{this.state.idiotCountdown} seconds left to answer.</strong>
+              <strong>{this.state.idiotCountdown} seconds left.</strong>
           </span>
         </span>
       </div>

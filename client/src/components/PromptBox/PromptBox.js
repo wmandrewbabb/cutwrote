@@ -5,7 +5,7 @@ import "./PromptBox.css"
 
 const PromptBox = (props) => (
     // <Container>
-    <div className="d-flex align-items-center justify-contents-center">
+    <div className="col-12">
         <div className="d-flex align-items-center justify-contents-center row w-100">
         <div className="col-1">
             <span ><img alt="bracket" className="leftBracket" src="/images/bracketleft.png"></img></span>

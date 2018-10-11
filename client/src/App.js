@@ -209,6 +209,9 @@ class App extends Component {
         gameRound: data.gameRound,
       })
 
+      console.log(`player pictures: ${this.state.prompts[this.state.currentPromptPos].player2Picture}`);
+      console.log(`player pictures: ${this.state.prompts[this.state.currentPromptPos].player1Picture}`);
+
       if(this.state.prompts[this.state.currentPromptPos].player1ID === socket.id || this.state.prompts[this.state.currentPromptPos].player2ID === socket.id) {
         console.log("Sorry! You can't vote on this one!");
         this.setState({
@@ -328,8 +331,8 @@ class App extends Component {
   }
 
 
-  sendFirstPrompt() {
-    // e.preventDefault();
+  sendFirstPrompt(e) {
+    e && e.preventDefault();
     console.log(this.state.firstPromptText);
     this.setState({
       onePromptSubmitted: true,
@@ -338,9 +341,8 @@ class App extends Component {
     socket.emit("firstPromptSent", {roomCode: this.state.roomCode, firstPrompt: this.state.firstPromptText});
   }
 
-  sendSecondPrompt() {
-    // e.preventDefault();
-
+  sendSecondPrompt(e) {
+    e && e.preventDefault();
     console.log(this.state.secondPromptText);
     this.setState({
       promptsSubmitted: true
@@ -531,7 +533,11 @@ class App extends Component {
                 answer1={this.state.prompts[this.state.currentPromptPos].answer1} 
                 answer2={this.state.prompts[this.state.currentPromptPos].answer2} 
                 answer1Votes={this.state.prompts[this.state.currentPromptPos].answer1Votes} 
-                answer2Votes={this.state.prompts[this.state.currentPromptPos].answer2Votes} 
+                answer2Votes={this.state.prompts[this.state.currentPromptPos].answer2Votes}
+                player1Pic={this.state.prompts[this.state.currentPromptPos].player1Picture}
+                player2Pic={this.state.prompts[this.state.currentPromptPos].player2Picture}
+                canVote={canVote}
+                hasVoted={hasVoted} 
               />
               {/* <Votes /> */}
             </div>}

@@ -105,8 +105,10 @@ class GamePrompt {
     this.prompt = prompt;
     this.player1ID = player1;
     this.player1Name = gameRooms[roomCode].playerList.players[player1].name;
+    this.player1Picture = gameRooms[roomCode].playerList.players[player1].playerPicture;
     this.player2ID = player2;
     this.player2Name = gameRooms[roomCode].playerList.players[player2].name;
+    this.player2Picture = gameRooms[roomCode].playerList.players[player2].playerPicture;
     this.answer1 = "";
     this.answer2 = "";
     this.answer1Votes = 0;
@@ -143,6 +145,8 @@ class PromptList {
         answer1Votes: this.prompts[id].answer1Votes,
         answer2Votes: this.prompts[id].answer2Votes,
         alreadyshown: this.prompts[id].alreadyshown,
+        player1Picture: this.prompts[id].player1Picture,
+        player2Picture: this.prompts[id].player2Picture,
       });
     }
 
