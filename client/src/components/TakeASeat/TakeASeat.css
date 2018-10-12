@@ -69,4 +69,5 @@ label, input {
 .nameInputField {
     min-height: 50px;
     float:left;
+    margin-bottom: 16px;
 }

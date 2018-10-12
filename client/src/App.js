@@ -572,6 +572,8 @@ class App extends Component {
                 answer2Votes={this.state.prompts[this.state.currentPromptPos].answer2Votes}
                 player1Pic={this.state.prompts[this.state.currentPromptPos].player1Picture}
                 player2Pic={this.state.prompts[this.state.currentPromptPos].player2Picture}
+                player1Status={this.state.prompts[this.state.currentPromptPos].player1Status}
+                player2Status={this.state.prompts[this.state.currentPromptPos].player2Status}
                 canVote={canVote}
                 hasVoted={hasVoted}
                 voteFor={this.voteFor}

@@ -33,9 +33,10 @@
 }
 
 .playerFaceDiv {
-  width: 10%;
-  min-width: 100px;
-  margin-right: 10px;
+  /* width: 100%; */
+  min-width: 96px;
+  max-width: 125px;
+  /* margin-right: 10px; */
   /* display: inline; */
   float: left;
 }

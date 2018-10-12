@@ -24,11 +24,11 @@ const VotingRound = (props) => (
             <div className="col-sm-6">
                     <button className="speechBubbleLeft justify-content-center align-items-center" onClick={() => props.voteFor(props.id, props.player1ID)}>{props.answer1}</button>
                         <div className="row w-100">
+                            <span className="ml-auto voteText leftVote">Votes:{props.answer1Votes}</span>
                             <div className="playerFaceDivLeft">
                                 <img src={props.player1Pic} alt={props.player1name}></img>
                                 <p className="nameText">{props.player1Name}</p>
                             </div>    
-                            <span className="ml-auto voteText">Votes:{props.answer1Votes}</span>
                         </div> 
                    
             </div>
@@ -48,11 +48,11 @@ const VotingRound = (props) => (
                 <div className="col-sm-6">
                 <div className="speechBubbleLeftCantVote justify-content-center align-items-center">{props.answer1}</div>
                         <div className="row w-100">
+                            <span className="ml-auto voteText leftVote">Votes:{props.answer1Votes}</span>
                             <div className="playerFaceDivLeft">
                                 <img src={props.player1Pic} alt={props.player1name}></img>
                                 <p className="nameText">{props.player1Name}</p>
                             </div>    
-                            <span className="ml-auto voteText">Votes:{props.answer1Votes}</span>
                         </div> 
                 </div>
                 <div className="col-sm-6">

@@ -6,6 +6,7 @@
     font-family: 'Alfa Slab One', cursive;
     font-size: 150%;
     margin-left: -16px;
+    overflow: hidden;
     /* padding-top: 0%; */
 }
 

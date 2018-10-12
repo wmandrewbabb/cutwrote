@@ -19,6 +19,13 @@
     text-shadow: 0 -0.05em 0.1em rgba(255, 255, 255, 0.3);
 }
 
+.votingRoomMessage {
+    font-family: 'Special Elite', cursive;
+}
+
+.leftVote{
+    padding-right: 16px;
+}
 
 .speechBubbleLeft:after {
     content: '';

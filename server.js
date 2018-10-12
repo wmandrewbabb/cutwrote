@@ -79,6 +79,7 @@ class GameRoom {
     this.activePlayerKeys = [];
     this.currentRound = 0;
     this.setTimeout;
+    this.voteTimeout;
   }
         
         // adds a player to the room
@@ -114,6 +115,8 @@ class GamePrompt {
     this.answer1Votes = 0;
     this.answer2Votes = 0;
     this.alreadyshown = false;
+    this.player1Status = "";
+    this.player2Status = "";
   }
       
 }
@@ -147,6 +150,8 @@ class PromptList {
         alreadyshown: this.prompts[id].alreadyshown,
         player1Picture: this.prompts[id].player1Picture,
         player2Picture: this.prompts[id].player2Picture,
+        player1Status: this.prompts[id].player1Status,
+        player2Status: this.prompts[id].player2Status,
       });
     }
 
@@ -502,9 +507,30 @@ io.on('connection', function(socket){
 
         gameRooms[roomCode].currentRound++;
 
-        io.sockets.in(roomCode).emit('start voting', {
+        // XXXXXXXXXXXXXXXXXXXXXX
+        // XXXXXXXXXXXXXXXXXXXXXX
+        // XXWinner's toast here
+
+        if(gameRooms[roomCode].promptList.prompts[promptId].answer1Votes > gameRooms[roomCode].promptList.prompts[promptId].answer2Votes) {
+          gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Winner!";
+          gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Loser!";
+        } else if (gameRooms[roomCode].promptList.prompts[promptId].answer2Votes > gameRooms[roomCode].promptList.prompts[promptId].answer1Votes) {
+          gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Loser!";
+          gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Winner!";
+        } else {
+          gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Tie!";
+          gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Tie!";
+        }
+
+        io.sockets.in(roomCode).emit('game progress update', { 
+          players: gameRooms[roomCode].playerList.timeOut(),
+          prompts: gameRooms[roomCode].promptList.preparePrompts(),
           gameRound: gameRooms[roomCode].currentRound,
         });
+
+        gameRooms[roomCode].voteTimeout = setTimeout(() => {io.sockets.in(roomCode).emit('start voting', {
+          gameRound: gameRooms[roomCode].currentRound,
+        });}, 5000);
 
         gameRooms[roomCode].currentScreen = "votingRounds";
 
