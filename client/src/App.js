@@ -79,7 +79,7 @@ class App extends Component {
     this.sendFirstPrompt = this.sendFirstPrompt.bind(this);
     this.sendSecondPrompt = this.sendSecondPrompt.bind(this);
     this.proceedToVotes = this.proceedToVotes.bind(this);
-    // this.sendVote = this.sendVote.bind(this);
+    this.voteFor = this.voteFor.bind(this);
     // this.handleWinners = this.handleWinners.bind(this);
     // this.sortScores = this.sortScores.bind(this);
 
@@ -193,31 +193,44 @@ class App extends Component {
     });
 
     socket.on("start voting", (data) => {
+
+      console.log("resetting voting state");
       this.setState({
         votingFor: "",
         hasVoted: false,
         canVote: true,
       })
 
-      //Starting voting round!
-      let newScreen = 'votingTransition';
-      let newPromptPos = data.gameRound-1;
+      console.log(`Player's current ability to vote: ${this.state.canVote}`);
+      if(data.gameRound <= this.state.prompts.length) {
+        //Starting voting round!
+        let newScreen = 'votingTransition';
+        let newPromptPos = data.gameRound-1;
 
-      this.setState({
-        currentScreen: newScreen,
-        currentPromptPos: newPromptPos,
-        gameRound: data.gameRound,
-      })
-
-      console.log(`player pictures: ${this.state.prompts[this.state.currentPromptPos].player2Picture}`);
-      console.log(`player pictures: ${this.state.prompts[this.state.currentPromptPos].player1Picture}`);
-
-      if(this.state.prompts[this.state.currentPromptPos].player1ID === socket.id || this.state.prompts[this.state.currentPromptPos].player2ID === socket.id) {
-        console.log("Sorry! You can't vote on this one!");
         this.setState({
-          canVote: false,
+          currentScreen: newScreen,
+          currentPromptPos: newPromptPos,
+          gameRound: data.gameRound,
         })
-      } 
+
+        console.log(`player pictures: ${this.state.prompts[this.state.currentPromptPos].player2Picture}`);
+        console.log(`player pictures: ${this.state.prompts[this.state.currentPromptPos].player1Picture}`);
+
+        // if(this.state.prompts[this.state.currentPromptPos].player1ID === socket.id || this.state.prompts[this.state.currentPromptPos].player2ID === socket.id) {
+        //   console.log("Sorry! You can't vote on this one!");
+        //   this.setState({
+        //     canVote: false,
+        //   })
+        // } 
+      } else {
+        this.setState ({
+          currentScreen: "winner"
+        })
+
+        console.log("End of rounds");
+      }
+
+
     })
 
     socket.on("start your game", (data) => {
@@ -413,6 +426,28 @@ class App extends Component {
     })
   };
 
+  voteFor(promptId, playerID) {
+    this.setState({
+      hasVoted: true,
+      canVote: false,
+    });
+
+    let voteWorth = 1;
+
+    if(this.state.playing === false)
+    { voteWorth = .1}
+
+    socket.emit("sendVote", {
+      promptId: promptId,
+      voteWorth: voteWorth,
+      playerID: playerID,
+      roomCode: this.state.roomCode,
+      voterID: socket.id, 
+    });
+    
+
+  };
+
 
   //ACTUALLY RENDER ALL MY DAMN COMPONENTS
   
@@ -525,6 +560,7 @@ class App extends Component {
           {currentScreen === 'voting' &&
             <div>
               <VotingRound
+                id={this.state.prompts[this.state.currentPromptPos].id}
                 currentPrompt={this.state.prompts[this.state.currentPromptPos].prompt} 
                 player1ID={this.state.prompts[this.state.currentPromptPos].player1ID} 
                 player2ID={this.state.prompts[this.state.currentPromptPos].player2ID} 
@@ -537,7 +573,8 @@ class App extends Component {
                 player1Pic={this.state.prompts[this.state.currentPromptPos].player1Picture}
                 player2Pic={this.state.prompts[this.state.currentPromptPos].player2Picture}
                 canVote={canVote}
-                hasVoted={hasVoted} 
+                hasVoted={hasVoted}
+                voteFor={this.voteFor}
               />
               {/* <Votes /> */}
             </div>}

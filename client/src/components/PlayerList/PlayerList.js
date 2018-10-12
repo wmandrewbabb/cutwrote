@@ -9,7 +9,7 @@ export const PlayerList = props => {
 
       return (
         <Container fluid>
-          <Row>
+          <div className="row w-100">
               {props.players.length ? (
                 <List>
                   {props.players.filter(x => x.playing).map(x => (
@@ -27,7 +27,7 @@ export const PlayerList = props => {
               ) : (
                 <h3>No Results to Display</h3>
               )}
-          </Row> 
+          </div> 
         </Container>
       );
   }

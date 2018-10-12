@@ -65,3 +65,8 @@ button:active{
 label, input {
     font-family: 'Special Elite', cursive!important;
 }
+
+.nameInputField {
+    min-height: 50px;
+    float:left;
+}

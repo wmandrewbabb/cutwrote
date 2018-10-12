@@ -19,6 +19,7 @@
     text-shadow: 0 -0.05em 0.1em rgba(255, 255, 255, 0.3);
 }
 
+
 .speechBubbleLeft:after {
     content: '';
     position: absolute;
@@ -95,8 +96,8 @@ element.style {
     /* display: inline; */
     float: none;
     position: absolute;
-    bottom: -20px;
-    left: 10px;
+    bottom: -20%;
+    left: 5%;
   }
   
   .playerFaceDivLeft img {
@@ -111,11 +112,94 @@ element.style {
     /* display: inline; */
     float: none;
     position: absolute;
-    bottom: -15px;
-    right: 10px;
+    bottom: -20%;
+    right: 5%;
   }
   
   .playerFaceDivRight img {
     width: 100%;
     height: auto;
   }
+
+  .voteText {
+    font-family: 'Alfa Slab One', cursive;
+    font-size: 200%;
+  }
+
+.cantVote{
+    background: #EB6864;
+}
+
+
+.speechBubbleLeftCantVote {
+    position: relative;
+    background: #EB6864;
+    border-radius: .4em;
+    transform: rotate(6deg);
+    box-shadow: 2px 2px 5px grey;
+}
+.speechBubbleLeftCantVote {
+    width: 85%;
+    padding: 30px 20px;
+    margin: 2em 0;
+    margin-left: 30px;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    font-size: 150%;
+    font-family: 'Love Ya Like A Sister', cursive;
+    text-shadow: 0 -0.05em 0.1em rgba(255, 255, 255, 0.3);
+}
+
+
+.speechBubbleLeftCantVote:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: #EB6864;
+    border-bottom: 0;
+    border-left: 0;
+    margin-left: -10px;
+    margin-bottom: -20px;
+}
+
+.speechBubbleRightCantVote {
+    position: relative;
+    background: #EB6864;
+    border-radius: .4em;
+    transform: rotate(-6deg);
+    box-shadow: 2px 2px 5px grey;
+
+}
+
+.speechBubbleRightCantVote {
+    width: 85%;
+    padding: 30px 20px;
+    margin: 2em 0;
+    margin-left: 15px;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    font-size: 150%;
+    font-family: 'Love Ya Like A Sister', cursive;
+    text-shadow: 0 -0.05em 0.1em rgba(255, 255, 255, 0.3);
+}
+
+.speechBubbleRightCantVote:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 70%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: #EB6864;
+    border-bottom: 0;
+    border-right: 0;
+    margin-left: -10px;
+    margin-bottom: -20px;
+}

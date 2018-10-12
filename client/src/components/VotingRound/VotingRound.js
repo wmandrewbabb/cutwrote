@@ -17,25 +17,61 @@ const VotingRound = (props) => (
         <div className="row w-100 justify-content-center align-items-center">
             <Timer
                 secondsRemaining={30}
-                // onCompletion={props.voteFor("neither")}
+                onCompletion={() => props.voteFor(props.id, 0)}
             />
         </div>
-        <div className="speechRow row w-100 justify-content-around align-items-center">
+        {props.canVote? (<div className="speechRow row w-100 justify-content-around align-items-center">
             <div className="col-sm-6">
-                <div className="speechBubbleLeft justify-content-center align-items-center">{props.answer1}</div>
-                <div className="playerFaceDivLeft">
-                    <img src={props.player1Pic} alt={props.player1name}></img>
-                    <p className="nameText">{props.player1Name}</p>
-                </div>
+                    <button className="speechBubbleLeft justify-content-center align-items-center" onClick={() => props.voteFor(props.id, props.player1ID)}>{props.answer1}</button>
+                        <div className="row w-100">
+                            <div className="playerFaceDivLeft">
+                                <img src={props.player1Pic} alt={props.player1name}></img>
+                                <p className="nameText">{props.player1Name}</p>
+                            </div>    
+                            <span className="ml-auto voteText">Votes:{props.answer1Votes}</span>
+                        </div> 
+                   
             </div>
             <div className="col-sm-6">
-                <div className="speechBubbleRight justify-content-center align-items-center">{props.answer2}</div>
-                <div className="playerFaceDivRight">
-                    <img src={props.player2Pic} alt={props.player2Name}></img>
-                    <p className="nameText">{props.player2Name}</p>
+                    <button className="speechBubbleRight justify-content-center align-items-center" onClick={() => props.voteFor(props.id, props.player2ID)}>{props.answer2}</button>
+                        <div className="row w-100">
+                            <span className="mr-auto voteText">Votes:{props.answer2Votes}</span>
+                            <div className="playerFaceDivRight">
+                                <img src={props.player2Pic} alt={props.player2Name}></img>
+                                <p className="nameText">{props.player2Name}</p>
+                            </div>
+                    </div>
+            </div>
+        </div>) : (
+        
+            <div className="speechRow row w-100 justify-content-around align-items-center">
+                <div className="col-sm-6">
+                <div className="speechBubbleLeftCantVote justify-content-center align-items-center">{props.answer1}</div>
+                        <div className="row w-100">
+                            <div className="playerFaceDivLeft">
+                                <img src={props.player1Pic} alt={props.player1name}></img>
+                                <p className="nameText">{props.player1Name}</p>
+                            </div>    
+                            <span className="ml-auto voteText">Votes:{props.answer1Votes}</span>
+                        </div> 
+                </div>
+                <div className="col-sm-6">
+                <div className="speechBubbleRightCantVote justify-content-center align-items-center">{props.answer2}</div>
+                        <div className="row w-100">
+                            <span className="mr-auto voteText">Votes:{props.answer2Votes}</span>
+                            <div className="playerFaceDivRight">
+                                <img src={props.player2Pic} alt={props.player2Name}></img>
+                                <p className="nameText">{props.player2Name}</p>
+                            </div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+
+
+
+        )}
+
     </div>
 );
 

@@ -6,7 +6,7 @@
      position: absolute; 
   } */
   
-  .background {
+  .bokkeBackground {
     width: 100vw;
     height: 100vh;
     background: #fff;
@@ -17,7 +17,7 @@
     bottom: .001vh;
   }
   
-  .background span {
+  .bokkeBackground span {
     width: 20vmin;
     height: 20vmin;
     border-radius: 20vmin;
@@ -28,7 +28,7 @@
     animation-timing-function: linear;
     animation-iteration-count: infinite;
   }
-  .background span:nth-child(1) {
+  .bokkeBackground span:nth-child(1) {
     color: #9c9c9c;
     top: 62%;
     left: 98%;
@@ -37,7 +37,7 @@
     transform-origin: 0vw 6vh;
     box-shadow: -40vmin 0 11.2061674658vmin currentColor;
   }
-  .background span:nth-child(2) {
+  .bokkeBackground span:nth-child(2) {
     color: #9c9c9c;
     top: 24%;
     left: 40%;
@@ -46,7 +46,7 @@
     transform-origin: 6vw -6vh;
     box-shadow: 40vmin 0 13.1215623975vmin currentColor;
   }
-  .background span:nth-child(3) {
+  .bokkeBackground span:nth-child(3) {
     color: #E8E9EB;
     top: 63%;
     left: 8%;
@@ -55,7 +55,7 @@
     transform-origin: -17vw -21vh;
     box-shadow: -40vmin 0 9.0035958323vmin currentColor;
   }
-  .background span:nth-child(4) {
+  .bokkeBackground span:nth-child(4) {
     color: #7F7F7F;
     top: 78%;
     left: 96%;
@@ -64,7 +64,7 @@
     transform-origin: 18vw -18vh;
     box-shadow: -40vmin 0 14.7186207309vmin currentColor;
   }
-  .background span:nth-child(5) {
+  .bokkeBackground span:nth-child(5) {
     color: #7F7F7F;
     top: 90%;
     left: 97%;
@@ -73,7 +73,7 @@
     transform-origin: -8vw 11vh;
     box-shadow: 40vmin 0 6.1223585399vmin currentColor;
   }
-  .background span:nth-child(6) {
+  .bokkeBackground span:nth-child(6) {
     color: #E8E9EB;
     top: 44%;
     left: 27%;
@@ -82,7 +82,7 @@
     transform-origin: 6vw 3vh;
     box-shadow: 40vmin 0 7.2022347988vmin currentColor;
   }
-  .background span:nth-child(7) {
+  .bokkeBackground span:nth-child(7) {
     color: #E8E9EB;
     top: 29%;
     left: 95%;
@@ -91,7 +91,7 @@
     transform-origin: 1vw -18vh;
     box-shadow: 40vmin 0 9.4320200421vmin currentColor;
   }
-  .background span:nth-child(8) {
+  .bokkeBackground span:nth-child(8) {
     color: #7F7F7F;
     top: 17%;
     left: 73%;
@@ -100,7 +100,7 @@
     transform-origin: 21vw -22vh;
     box-shadow: 40vmin 0 11.000620371vmin currentColor;
   }
-  .background span:nth-child(9) {
+  .bokkeBackground span:nth-child(9) {
     color: #E8E9EB;
     top: 96%;
     left: 56%;
@@ -109,7 +109,7 @@
     transform-origin: 19vw -16vh;
     box-shadow: 40vmin 0 9.3456194712vmin currentColor;
   }
-  .background span:nth-child(10) {
+  .bokkeBackground span:nth-child(10) {
     color: #9c9c9c;
     top: 60%;
     left: 2%;
@@ -118,7 +118,7 @@
     transform-origin: 24vw -18vh;
     box-shadow: -40vmin 0 14.2048345366vmin currentColor;
   }
-  .background span:nth-child(11) {
+  .bokkeBackground span:nth-child(11) {
     color: #E8E9EB;
     top: 26%;
     left: 39%;
@@ -127,7 +127,7 @@
     transform-origin: 5vw 15vh;
     box-shadow: -40vmin 0 13.7113067564vmin currentColor;
   }
-  .background span:nth-child(12) {
+  .bokkeBackground span:nth-child(12) {
     color: #9c9c9c;
     top: 99%;
     left: 60%;
@@ -136,7 +136,7 @@
     transform-origin: 2vw 21vh;
     box-shadow: -40vmin 0 13.2058459356vmin currentColor;
   }
-  .background span:nth-child(13) {
+  .bokkeBackground span:nth-child(13) {
     color: #E8E9EB;
     top: 86%;
     left: 73%;
@@ -145,7 +145,7 @@
     transform-origin: -20vw 17vh;
     box-shadow: -40vmin 0 11.9970358475vmin currentColor;
   }
-  .background span:nth-child(14) {
+  .bokkeBackground span:nth-child(14) {
     color: #E8E9EB;
     top: 92%;
     left: 22%;
@@ -154,7 +154,7 @@
     transform-origin: 8vw -16vh;
     box-shadow: 40vmin 0 5.2076971445vmin currentColor;
   }
-  .background span:nth-child(15) {
+  .bokkeBackground span:nth-child(15) {
     color: #E8E9EB;
     top: 17%;
     left: 37%;
@@ -163,7 +163,7 @@
     transform-origin: -16vw 19vh;
     box-shadow: 40vmin 0 7.7968088195vmin currentColor;
   }
-  .background span:nth-child(16) {
+  .bokkeBackground span:nth-child(16) {
     color: #E8E9EB;
     top: 58%;
     left: 72%;
@@ -172,7 +172,7 @@
     transform-origin: -2vw 20vh;
     box-shadow: 40vmin 0 5.587721109vmin currentColor;
   }
-  .background span:nth-child(17) {
+  .bokkeBackground span:nth-child(17) {
     color: #E8E9EB;
     top: 19%;
     left: 45%;
@@ -181,7 +181,7 @@
     transform-origin: 16vw 22vh;
     box-shadow: 40vmin 0 9.4496133547vmin currentColor;
   }
-  .background span:nth-child(18) {
+  .bokkeBackground span:nth-child(18) {
     color: #E8E9EB;
     top: 41%;
     left: 69%;
@@ -190,7 +190,7 @@
     transform-origin: 11vw -16vh;
     box-shadow: 40vmin 0 10.8218031032vmin currentColor;
   }
-  .background span:nth-child(19) {
+  .bokkeBackground span:nth-child(19) {
     color: #9c9c9c;
     top: 87%;
     left: 67%;
@@ -199,7 +199,7 @@
     transform-origin: -12vw 18vh;
     box-shadow: 40vmin 0 11.9790467966vmin currentColor;
   }
-  .background span:nth-child(20) {
+  .bokkeBackground span:nth-child(20) {
     color: #7F7F7F;
     top: 49%;
     left: 89%;
@@ -216,7 +216,7 @@
   }
   
   @media only screen and (max-width: 768px) {
-    .background {
+    .bokkeBackground {
       display:none;
     }
 }

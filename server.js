@@ -452,6 +452,83 @@ io.on('connection', function(socket){
 
   });
 
+  //How we manage votes in these parts
+
+  socket.on("sendVote", (data) => {
+    let promptId = data.promptId;
+    let voteWorth = data.voteWorth;
+    let playerID = data.playerID;
+    let roomCode = data.roomCode;
+    let voterID = data.voterID;
+
+    if (playerID === 0) {
+      console.log("this person probably timed out");
+    } else {
+
+      gameRooms[roomCode].playerList.players[playerID].score = gameRooms[roomCode].playerList.players[playerID].score + voteWorth;
+      if(playerID === gameRooms[roomCode].promptList.prompts[promptId].player1ID){
+        gameRooms[roomCode].promptList.prompts[promptId].answer1Votes = gameRooms[roomCode].promptList.prompts[promptId].answer1Votes + voteWorth;
+        console.log("Prompt's #1 answer is being voted for");
+      } else if (playerID === gameRooms[roomCode].promptList.prompts[promptId].player2ID) {
+        gameRooms[roomCode].promptList.prompts[promptId].answer2Votes = gameRooms[roomCode].promptList.prompts[promptId].answer2Votes + voteWorth;
+        console.log("Prompt's #2 answer is being voted for");
+      }
+    }
+
+    gameRooms[roomCode].playerList.players[voterID].voted = true;
+
+    //We're going to check and see if everyone's voted
+
+    let iterator = 0;
+    let playerKey = Object.keys(gameRooms[roomCode].playerList.players);
+    let checkPlayers = 0;
+
+    //here we're going to get some information about our intial players and push this to the game room
+    //there is probably a smaller way of doing this but this works for now
+
+    while (iterator < playerKey.length)
+    {
+      let iv = playerKey[iterator];
+      if (gameRooms[roomCode].playerList.players[iv].voted === true) 
+      {
+        checkPlayers++;
+      }
+    
+      iterator++;
+    }
+
+    if(gameRooms[roomCode].playerList.length === checkPlayers) {
+      console.log("everyone's ready");
+
+        gameRooms[roomCode].currentRound++;
+
+        io.sockets.in(roomCode).emit('start voting', {
+          gameRound: gameRooms[roomCode].currentRound,
+        });
+
+        gameRooms[roomCode].currentScreen = "votingRounds";
+
+        for(let id in gameRooms[roomCode].playerList.players){
+          console.log(`resetting ${id}'s votes`);
+          gameRooms[roomCode].playerList.players[id].voted=false;
+        }
+        // clearInterval(gameRooms[roomCode].setTimeout);
+
+    } else {
+      console.log("waiting on someone still");
+    }
+
+
+
+    io.sockets.in(roomCode).emit('game progress update', { 
+      players: gameRooms[roomCode].playerList.timeOut(),
+      prompts: gameRooms[roomCode].promptList.preparePrompts(),
+      gameRound: gameRooms[roomCode].currentRound,
+    });
+
+
+  });
+
   socket.on("startGame", (data) => {
     console.log(`Starting game in room ${data.roomCode}`);
     let roomCode = data.roomCode;
