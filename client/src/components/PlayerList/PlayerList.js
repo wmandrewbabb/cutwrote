@@ -16,9 +16,11 @@ export const PlayerList = props => {
                          <ListItem key={x.id}>
                          <div className="crushPic">
                             {props.currentScreen === 'prompts' &&
-                            <div>{x.ready ? (<p className="readyExclamation">!</p>) : (<p className="readyExclamation">?</p>)}</div>}
+                            <div>{x.ready ? (<p className="readyExclamation bounceIn">!</p>) : (<p className="readyExclamation bounceIn">?</p>)}</div>}
                             <img src={x.playerPicture} alt={x.name}></img>
                             <p className="nameText">{x.name}</p>
+                            {props.currentScreen === 'winner' && 
+                            <div className="scoreList bounceIn">{x.score}</div>}
                          </div>
                          </ListItem>  
                   )

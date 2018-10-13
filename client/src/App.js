@@ -80,6 +80,7 @@ class App extends Component {
     this.sendSecondPrompt = this.sendSecondPrompt.bind(this);
     this.proceedToVotes = this.proceedToVotes.bind(this);
     this.voteFor = this.voteFor.bind(this);
+    // this.sortByKey = this.sortByKey.bind(this);
     // this.handleWinners = this.handleWinners.bind(this);
     // this.sortScores = this.sortScores.bind(this);
 
@@ -223,8 +224,16 @@ class App extends Component {
         //   })
         // } 
       } else {
+
+
+        let winnersSort = this.state.players.sort((a, b) =>a. score-b.score)
+
+
+        console.log(`sorted winners = ${winnersSort}`);
+
         this.setState ({
-          currentScreen: "winner"
+          currentScreen: "winner",
+          players: winnersSort
         })
 
         console.log("End of rounds");
@@ -448,6 +457,26 @@ class App extends Component {
 
   };
 
+    // sortByKey(array, key) {
+    //   return array.sort(function(a, b) {
+    //       var x = a[key];
+    //       var y = b[key];
+
+    //       if (typeof x == "string")
+    //       {
+    //           x = (""+x).toLowerCase(); 
+    //       }
+    //       if (typeof y == "string")
+    //       {
+    //           y = (""+y).toLowerCase();
+    //       }
+
+    //       return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    //   });
+    // }
+
+
+
 
   //ACTUALLY RENDER ALL MY DAMN COMPONENTS
   
@@ -580,11 +609,17 @@ class App extends Component {
               />
               {/* <Votes /> */}
             </div>}
-          {/*{currentScreen === 'score' &&
+          {currentScreen === 'winner' &&
             <div>
-              <ScoreScreen />
+              <p> THIS IS WHERE THE SCORES WILL BE AND WINNER DISPLAYED</p>
+              {/* <ScoreScreen />*/}
+              <PlayerList
+                players={players}
+                currentScreen={currentScreen}
+              />
+              {/* <GameOver />  */}
             </div>}
-          {currentScreen === 'gameover' &&
+          {/*{currentScreen === 'gameover' &&
             <div>
               <FinalScore />
               <SaveGame />

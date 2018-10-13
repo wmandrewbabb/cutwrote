@@ -130,7 +130,7 @@ element.style {
 
   .voteText {
     font-family: 'Alfa Slab One', cursive;
-    font-size: 200%;
+    font-size: 120%;
   }
 
 .cantVote{
@@ -210,3 +210,31 @@ element.style {
     margin-left: -10px;
     margin-bottom: -20px;
 }
+
+.statusTextLeft {
+    font-family: 'Alfa Slab One', cursive;
+    text-align: left;
+    text-shadow: 1px 1px 0px  #fff, -1px -1px 0px  #fff, 1px -1px 0px  #fff, -1px 1px 0px  #fff;
+    top: 25px;
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    float: none;
+    font-size: 250%;
+    color: orangered;
+    height: 1.5rem;
+  }
+
+  .statusTextRight {
+    font-family: 'Alfa Slab One', cursive;
+    text-align: right;
+    text-shadow: 1px 1px 0px  #fff, -1px -1px 0px  #fff, 1px -1px 0px  #fff, -1px 1px 0px  #fff;
+    top: 25px;
+    position: absolute;
+    right: 50%;
+    bottom: 50%;
+    float: none;
+    font-size: 250%;
+    color: orangered;
+    height: 1.5rem;
+  }

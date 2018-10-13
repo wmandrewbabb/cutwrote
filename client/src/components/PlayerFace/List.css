@@ -34,7 +34,6 @@
 
 .playerFaceDiv {
   /* width: 100%; */
-  min-width: 96px;
   max-width: 125px;
   /* margin-right: 10px; */
   /* display: inline; */
@@ -42,6 +41,7 @@
 }
 
 .playerFaceDiv img {
+  min-width: 96px;
   width: 100%;
   height: auto;
 }
@@ -67,6 +67,18 @@
   position: relative;
   float: none;
   font-size: 300%;
+  color: orangered;
+  height: 1.5rem;
+}
+
+.scoreList {
+  font-family: 'Alfa Slab One', cursive;
+  text-align: center;
+  text-shadow: 1px 1px 0px  #fff, -1px -1px 0px  #fff, 1px -1px 0px  #fff, -1px 1px 0px  #fff;
+  top: -45px;
+  position: relative;
+  float: none;
+  font-size: 170%;
   color: orangered;
   height: 1.5rem;
 }
