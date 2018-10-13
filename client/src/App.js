@@ -226,7 +226,11 @@ class App extends Component {
       } else {
 
 
-        let winnersSort = this.state.players.sort((a, b) =>a. score-b.score)
+        let winnersSort = this.state.players.sort((a, b) => a.score-b.score);
+        //        let winnersSort = this.state.players.sort((a, b) => b.score-a.score);
+
+        winnersSort = winnersSort.reverse();
+
 
 
         console.log(`sorted winners = ${winnersSort}`);
