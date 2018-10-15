@@ -324,7 +324,7 @@ class App extends Component {
           console.log("Sorry! You can't vote on this one!");
           this.setState({
             canVote: false,
-          })
+          });
         } 
       } else {
 
