@@ -91,13 +91,25 @@ class GameRoom {
     this.promptList.prompts[order] = new GamePrompt(prompt, id1, id2, roomCode);
   }
 
-  // removeFromRoom(id) {
-      //this is going to be long
-      // const { roomCode, playerList, promptList, currentScreen, currentRound, activePlayerKeys } = this;
-      // const { players } = playerList;
-  
-  // }
+  removeFromRoom(id) {
+    const { roomCode, playerList} = this;
+    const { players } = playerList;
 
+    // delete player from playerList and let other players know someone left
+    let departingPlayer = players[id].name;
+    console.log(`${departingPlayer} left room ${roomCode}`);
+
+    if(gameRooms[roomCode].currentScreen === "lobby") { 
+      delete players[id];
+      io.sockets.in(roomCode).emit('update players', { players: playerList.prepareToSend() })
+    } else {
+      if(!gameRooms[roomCode].playerList.players[id].playing){
+        delete players[id];
+      } else {
+        gameRooms[roomCode].playerList.players[id].connected = false;
+      }
+    }
+  } 
 }
 
 class GamePrompt {
@@ -248,14 +260,14 @@ io.on('connection', function(socket){
   
   socket.on('disconnect', function(){
     console.log(socket.id + ' User Disconnected');
-    // for (let roomCode in gameRooms) {
-    //   let { players } = gameRooms[roomCode].playerList;
+    for (let roomCode in gameRooms) {
+      let { players } = gameRooms[roomCode].playerList;
 
-    //   if (players[socket.id]) {
-    //     socket.leave(roomCode);
-    //     gameRooms[roomCode].removeFromRoom(socket.id);
-    //   }
-    // }
+      if (players[socket.id]) {
+        socket.leave(roomCode);
+        gameRooms[roomCode].removeFromRoom(socket.id);
+      }
+    }
   });
 
   socket.on('create', (data) => {
@@ -292,21 +304,31 @@ io.on('connection', function(socket){
     console.log("Getting a request to join room " + data.roomCode);
 
     // if there is a room to join...
-    if (gameRooms[roomCode]) {
 
+    if (gameRooms[roomCode]) {
         const { playerList} = gameRooms[roomCode];
 
         socket.join(roomCode);
         gameRooms[roomCode].addToRoom(socket.id);
 
-        io.sockets.in(roomCode).emit('update players', { 
-          players: playerList.prepareToSend(), 
-          // joiningPlayer: data.name 
-        });
-
-        socket.emit('room joined', {
-          roomCode,
-        });
+        if(gameRooms[roomCode].currentScreen != "lobby") {
+          io.sockets.to(socket.id).emit('late join', {
+            roomCode: roomCode,
+            players: gameRooms[roomCode].playerList.prepareToSend(), 
+            prompts: gameRooms[roomCode].promptList.preparePrompts(),
+            gameRound: gameRooms[roomCode].currentRound,     
+            currentScreen: gameRooms[roomCode].currentScreen,
+           })
+        } else {
+          io.sockets.in(roomCode).emit('update players', { 
+            players: playerList.prepareToSend(), 
+            // joiningPlayer: data.name 
+          });
+  
+          socket.emit('room joined', {
+            roomCode,
+          });
+        }
 
         console.log(gameRooms[roomCode]);
 
@@ -316,6 +338,8 @@ io.on('connection', function(socket){
       socket.emit('bad roomcode');
       console.log("bad roomcode");
     }
+
+
   });
 
   socket.on('joinRedirect', (data) => {
@@ -329,14 +353,24 @@ io.on('connection', function(socket){
       socket.join(roomCode);
       gameRooms[roomCode].addToRoom(socket.id);
 
-      io.sockets.in(roomCode).emit('update players', { 
-        players: playerList.prepareToSend(), 
-        // joiningPlayer: data.name 
-      });
+      if(gameRooms[roomCode].currentScreen != "lobby") {
+        io.sockets.to(socket.id).emit('late join', {
+          roomCode: roomCode,
+          players: gameRooms[roomCode].playerList.prepareToSend(), 
+          prompts: gameRooms[roomCode].promptList.preparePrompts(),
+          gameRound: gameRooms[roomCode].currentRound,     
+          currentScreen: gameRooms[roomCode].currentScreen,
+         })
+      } else {
+        io.sockets.in(roomCode).emit('update players', { 
+          players: playerList.prepareToSend(), 
+          // joiningPlayer: data.name 
+        });
 
-      socket.emit('room joined', {
-        roomCode,
-      });
+        socket.emit('room joined', {
+          roomCode,
+        });
+      }
 
       console.log(gameRooms[roomCode]);
 
@@ -430,7 +464,7 @@ io.on('connection', function(socket){
     while (iterator < playerKey.length)
     {
       let iv = playerKey[iterator];
-      if (gameRooms[roomCode].playerList.players[iv].ready === true) 
+      if (gameRooms[roomCode].playerList.players[iv].ready === true || gameRooms[roomCode].playerList.players[iv].connected === false) 
       {
         checkPlayers++;
       }
@@ -494,7 +528,7 @@ io.on('connection', function(socket){
     while (iterator < playerKey.length)
     {
       let iv = playerKey[iterator];
-      if (gameRooms[roomCode].playerList.players[iv].voted === true) 
+      if (gameRooms[roomCode].playerList.players[iv].voted === true || gameRooms[roomCode].playerList.players[iv].connected === false) 
       {
         checkPlayers++;
       }
@@ -507,8 +541,6 @@ io.on('connection', function(socket){
 
         gameRooms[roomCode].currentRound++;
 
-        // XXXXXXXXXXXXXXXXXXXXXX
-        // XXXXXXXXXXXXXXXXXXXXXX
         // XXWinner's toast here
 
         if(gameRooms[roomCode].promptList.prompts[promptId].answer1Votes > gameRooms[roomCode].promptList.prompts[promptId].answer2Votes) {

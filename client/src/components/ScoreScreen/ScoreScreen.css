@@ -1,0 +1,47 @@
+.winnerName {
+    /* align-content: center; 
+    justify-content: center; */
+    font-family: 'Alfa Slab One', cursive;
+    text-align: center;
+    text-shadow: 1px 1px 0px  #fff, -1px -1px 0px  #fff, 1px -1px 0px  #fff, -1px 1px 0px  #fff;
+    bottom: 20px;
+    position: relative;
+    float: none;
+    font-size: 120%;
+    float: none;
+    clear: both;
+    /* display: unset; */
+  }
+  
+  .winnerScore {
+    font-family: 'Alfa Slab One', cursive;
+    text-align: center;
+    text-shadow: 1px 1px 0px  #fff, -1px -1px 0px  #fff, 1px -1px 0px  #fff, -1px 1px 0px  #fff;
+    top: -25px;
+    position: relative;
+    float: none;
+    font-size: 300%;
+    color: #EB6864;
+    height: 1.5rem;
+    float: none;
+    clear: both;
+  }
+  
+  .winnerPic {
+    width: auto;
+    max-width: 200px;
+    /* min-height: 100px; */
+    height: auto;
+    max-height: 225px;
+
+  }
+
+  .winnerAnnoucement{
+    font-family: 'Alfa Slab One', cursive;
+    color: #EB6864;
+  }
+
+  .winnerSpace{
+      margin-bottom: 15px;
+      margin-top: 10px;
+  }

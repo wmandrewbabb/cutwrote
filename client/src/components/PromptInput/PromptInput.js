@@ -34,7 +34,7 @@ const PromptInput = (props) => (
                                 }}
                             />
                             <Timer
-                                secondsRemaining={10}
+                                secondsRemaining={45}
                                 onCompletion={props.sendFirstPrompt}
                             />
                         </form>
@@ -67,7 +67,7 @@ const PromptInput = (props) => (
                                 }}
                             />
                             <Timer
-                                secondsRemaining={10}
+                                secondsRemaining={45}
                                 onCompletion={props.sendSecondPrompt}
                             />
                         </form>

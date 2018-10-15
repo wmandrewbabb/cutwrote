@@ -9,3 +9,25 @@ html, body, #root, #root > div {
 .App {
     height: 100%;
 }
+
+.restartButton {
+    text-align: center;
+    font-size: 150%;
+    font-family: 'Alfa Slab One', cursive;
+    color: white;
+    background-color: black;
+    padding: 10px;
+    /* border-radius: 4px; */
+    padding-left: 15px;
+    padding-right: 15px;
+    text-decoration: none!important;
+    margin-bottom: 10px;
+}
+
+.restartButton a:active{
+    text-decoration: none!important;
+}
+
+.restartButton a:hover{
+    text-decoration: none!important;
+}

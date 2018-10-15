@@ -4,6 +4,8 @@ import SplashTitle from "./components/SplashTitle";
 import FrontInput from "./components/Frontinput";
 import Nav from "./components/Nav";
 import BackgroundBokke from "./components/BackgroundBokke";
+// import BackgroundParticle from "./components/BackgroundParticle";
+import BackgroundRectangle from "./components/BackgroundRectangle";
 import Popup from "./components/Popup";
 import Modal from "./components/Modal";
 import RoomDashBoard from "./components/RoomDashBoard";
@@ -16,8 +18,9 @@ import ReadySetGo from "./components/ReadySetGo";
 import PromptInput from "./components/PromptInput";
 import VotingRoundTransition from "./components/VotingRoundTransition";
 import VotingRound from "./components/VotingRound";
+import ScoreTransition from "./components/ScoreTransition";
 // import Votes from "./components/Votes";
-// import ScoreScreen from "./components/ScoreScreen";
+import ScoreScreen from "./components/ScoreScreen";
 // import FinalScore from "./components/FinalScore";
 // import SaveGame from "./components/SaveGame";
 // import ReturntoStartButton from "./components/ReturntoStartButton";
@@ -116,6 +119,49 @@ class App extends Component {
 
     })
 
+    socket.on('disconnect', () => {
+
+      this.setState({
+        name: '',
+        roomCode: '',
+        prompts: [],
+        currentPrompt: {},
+        currentScreen: 'home',
+        players: [],
+        gameStarted: false,
+        playersReady: false,
+        playing: false,
+        message: '',
+        modalMessage: '',
+        popupMessage: '',
+        modalButtons: null,
+        showMenu: false,
+        showModal: false,
+        showPopup: false,
+        codeInput: '',
+        multiline: 'Controlled',
+        playerCount: 0,
+        showFooter: false,
+        firstPrompt: -1,
+        secondPrompt: -1,
+        currentPromptPos: -1,
+        firstPromptText: "",
+        secondPromptText: "",
+        onePromptSubmitted: false,
+        promptsSubmitted: false,
+        joinFromRedirect: false,
+        timer: null,
+        gameRound: 0,
+        votingFor: "",
+        hasVoted: false,
+        canVote: true,
+      })
+
+      console.log("Disoconnected, reload to reconnect");
+      // socket.connect();
+
+    })
+
 
     // console.log(`connected as ${socket.id}`);
     if (this.props.match.params.id === undefined) {
@@ -193,6 +239,62 @@ class App extends Component {
       })
     });
 
+    socket.on("late join", (data) => {
+
+      this.setState({
+        roomCode: data.roomCode
+      });
+
+      let currentScreenFromServer = data.currentScreen;
+      let newPromptPos = 0;
+
+      if (data.gameRound > 0){
+        newPromptPos = data.gameRound-1;
+      }
+      
+      console.log(`data.gameRound: ${data.gameRound}`);
+
+
+      this.setState({
+        playing: false,
+        players: data.players,
+        prompts: data.prompts,
+        gameRound: data.gameRound,
+        currentPromptPos: newPromptPos,
+        promptsSubmitted: true,
+      });
+
+      console.log(data.players);
+      console.log(data.prompts);
+      
+      console.log(`stupid prompt error: ${this.state.prompts[this.state.currentPromptPos].prompt}`);
+      
+      if (currentScreenFromServer === "votingRounds") {
+
+        // let newScreen = 'votingTransition';
+        this.setState({
+          canVote: false,
+          currentScreen: "voting",
+        });
+
+        console.log("You'll be able to vote next time!");
+
+      } else if( currentScreenFromServer === "firstTransition") {
+
+        let newScreen = "prompts";
+
+
+        this.setState({
+          currentScreen: newScreen,
+          currentPromptPos: newPromptPos,
+          gameRound: data.gameRound,
+        })
+      }
+
+    });
+
+    
+
     socket.on("start voting", (data) => {
 
       console.log("resetting voting state");
@@ -217,28 +319,31 @@ class App extends Component {
         console.log(`player pictures: ${this.state.prompts[this.state.currentPromptPos].player2Picture}`);
         console.log(`player pictures: ${this.state.prompts[this.state.currentPromptPos].player1Picture}`);
 
-        // if(this.state.prompts[this.state.currentPromptPos].player1ID === socket.id || this.state.prompts[this.state.currentPromptPos].player2ID === socket.id) {
-        //   console.log("Sorry! You can't vote on this one!");
-        //   this.setState({
-        //     canVote: false,
-        //   })
-        // } 
+        //We're going to test if this is one of the prompts you filled out, if so you're flagged as not being able to vote
+        if(this.state.prompts[this.state.currentPromptPos].player1ID === socket.id || this.state.prompts[this.state.currentPromptPos].player2ID === socket.id) {
+          console.log("Sorry! You can't vote on this one!");
+          this.setState({
+            canVote: false,
+          })
+        } 
       } else {
 
+        //If we're out of prompts, we'll sort the winners and then display the final score transition card
 
         let winnersSort = this.state.players.sort((a, b) => a.score-b.score);
-        //        let winnersSort = this.state.players.sort((a, b) => b.score-a.score);
+        //let winnersSort = this.state.players.sort((a, b) => b.score-a.score);
 
         winnersSort = winnersSort.reverse();
-
-
-
         console.log(`sorted winners = ${winnersSort}`);
 
-        this.setState ({
+        this.setState({currentScreen:"scoreTransition"});
+
+        setTimeout(() => {
+          this.setState ({
           currentScreen: "winner",
           players: winnersSort
         })
+        }, 6000);
 
         console.log("End of rounds");
       }
@@ -562,12 +667,14 @@ class App extends Component {
                 startGame={this.startGame}
                 playing={playing}
               />
+              <BackgroundRectangle />
             </div>}
           {currentScreen === 'readyset' &&
             <ReadySetGo />
           }
           {currentScreen === 'prompts' &&
             <div>
+              {this.state.playing === true &&
               <PromptInput
                 timer={this.timer}
                 firstPromptText={firstPromptText}
@@ -578,7 +685,7 @@ class App extends Component {
                 sendSecondPrompt={this.sendSecondPrompt}
                 handleChange={this.handleChange}
                 currentPrompt={this.state.prompts[this.state.currentPromptPos].prompt} 
-              />
+              />}
               <PlayerList 
                 players={players}
                 currentScreen={currentScreen}
@@ -613,14 +720,23 @@ class App extends Component {
               />
               {/* <Votes /> */}
             </div>}
+          {currentScreen === "scoreTransition" &&
+            <div> 
+              <ScoreTransition />
+            </div>}
           {currentScreen === 'winner' &&
             <div>
-              <p> THIS IS WHERE THE SCORES WILL BE AND WINNER DISPLAYED</p>
-              {/* <ScoreScreen />*/}
+              <ScoreScreen 
+                players={players}
+              />
+              <div className="restartButton">
+                <a href="/">New Game!</a>
+              </div>
               <PlayerList
                 players={players}
                 currentScreen={currentScreen}
               />
+              <BackgroundBokke />
               {/* <GameOver />  */}
             </div>}
           {/*{currentScreen === 'gameover' &&

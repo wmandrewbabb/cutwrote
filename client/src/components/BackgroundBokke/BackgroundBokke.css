@@ -11,7 +11,7 @@
     height: 100vh;
     background: #fff;
     z-index: -1;
-    position: absolute;
+    position: fixed;
     overflow:hidden;
     float: none;
     bottom: .001vh;

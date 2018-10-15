@@ -1,0 +1,28 @@
+.fullBlackScreen2 {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    font-family: 'Alfa Slab One', cursive;
+    /* font-size: 150%; */
+    margin-left: -16px;
+    overflow: hidden;
+    /* padding-top: 0%; */
+}
+
+.ml16 {
+    color: #402d2d;
+    padding: 40px 0;
+    font-weight: 800;
+    /* font-size: 3em; */
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    overflow: hidden;
+    font-family: 'Alfa Slab One', cursive;
+    color: white;
+  }
+  
+  .ml16 .letter {
+    display: inline-block;
+    line-height: 1em;
+  }
