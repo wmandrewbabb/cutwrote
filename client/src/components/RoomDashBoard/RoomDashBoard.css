@@ -22,3 +22,21 @@ p{
     font-size: 140%;
     font-family: 'Alfa Slab One', cursive;
 }
+
+
+@media only screen and (max-width: 480px) {
+    .roomCodeBig{
+        font-size: 400%;
+        font-family: 'Alfa Slab One', cursive;
+        margin-bottom: 14px;
+        line-height: 70%;
+        color: rgb(80, 80, 80);
+    }
+    
+    .roomShout{
+        margin-top: 5vh;
+        font-size: 170%;
+        font-family: 'Alfa Slab One', cursive;
+        margin-bottom: 14px;
+    }
+    }

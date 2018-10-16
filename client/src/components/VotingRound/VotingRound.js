@@ -12,7 +12,7 @@ const VotingRound = (props) => (
             />
         </div>
         <div className="row w-100 justify-content-center align-items-center">
-            <div className="votingRoomMessage">{props.canVote ? (<h3>Vote for the funniest Answer!</h3> ) : (<h3>Please wait while the others vote!</h3> )}</div>
+            <div className="votingRoomMessage">{props.canVote ? (<h3 className="votingRoomMessage">Vote for the funniest Answer!</h3> ) : (<h3 className="votingRoomMessage">Please wait while the others vote!</h3> )}</div>
         </div>
         <div className="row w-100 justify-content-center align-items-center">
             <Timer

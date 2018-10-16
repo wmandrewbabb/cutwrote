@@ -6,7 +6,7 @@ const CheckPlayers = props => {
 
     let playersPlaying = props.playerCount;
 
-    if(playersPlaying > 1) {
+    if(playersPlaying > 2) {
         return <button className="readyButton" onClick={props.startGame}>Start Game</button>
     }
 

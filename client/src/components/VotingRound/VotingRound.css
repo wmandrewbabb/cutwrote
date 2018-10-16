@@ -21,6 +21,8 @@
 
 .votingRoomMessage {
     font-family: 'Special Elite', cursive;
+    text-align: center;
+    font-size: 120%;
 }
 
 .leftVote{

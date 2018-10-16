@@ -1,30 +1,29 @@
 import React, { Component } from "react";
 import "./BackgroundParticle.css";
+import THREE from "three";
 
 
-var camera,
-scene,
-renderer,
-particles,
-particle,
-material,
-particleCount,
-points,
-texture;
-
-var xSpeed, ySpeed;
-xSpeed = 0.0005;
-ySpeed = 0.001;
-
-var winWidth, winHeight;
-winWidth = window.innerWidth;
-winHeight = window.innerHeight;
-
-
-
+//IT IS IMPORTANT TO NOTE THAT NONE OF THIS WORKS SO IT'S NOT IN THE FINAL APP CURRENTLY
+//Trying to adapt this from a nifty codepen https://codepen.io/anon/pen/BqQOvd?editors=1000
 class BackgroundParticle extends Component {
 
-  
+  constructor() {
+    this.state = {
+      camera,
+      scene,
+      renderer, 
+      particles,
+      particle,
+      material,
+      particleCount,
+      points, 
+      texture,
+      xSpeed = 0.0005,
+      ySpeed = 0.001,
+      winWidth = window.innerWidth,
+      winHeight = window.innerHeight,
+    }
+  }
 
   componentDidMount() {
 
