@@ -535,7 +535,7 @@ io.on('connection', function(socket){
     }, 25000);
 
     if (playerID === 0) {
-      console.log("this person probably timed out");
+      console.log("this person probably timed out or is one of the prompt-providers");
     } else {
 
       gameRooms[roomCode].playerList.players[playerID].score = gameRooms[roomCode].playerList.players[playerID].score + voteWorth;

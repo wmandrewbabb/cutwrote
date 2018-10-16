@@ -278,6 +278,8 @@ class App extends Component {
           currentScreen: "voting",
         });
 
+        this.voteFor(this.state.prompts[this.state.currentPromptPos].id, 0);
+
         console.log("You'll be able to vote next time!");
 
       } else if( currentScreenFromServer === "firstTransition") {
