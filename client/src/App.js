@@ -200,6 +200,7 @@ class App extends Component {
       });
       console.log(data.players);
       console.log(data.prompts);
+      console.log(`game round: ${data.gameRound}`)
     });
 
     socket.on('room created', (data) => {
