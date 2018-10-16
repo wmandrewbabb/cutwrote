@@ -509,6 +509,18 @@ io.on('connection', function(socket){
     gameRooms[roomCode].voteCatcher = setTimeout( ()=> {
 
       console.log("the room has timed out");
+      gameRooms[roomCode].currentRound++;
+
+      if(gameRooms[roomCode].promptList.prompts[promptId].answer1Votes > gameRooms[roomCode].promptList.prompts[promptId].answer2Votes) {
+        gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Winner!";
+        gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Loser!";
+      } else if (gameRooms[roomCode].promptList.prompts[promptId].answer2Votes > gameRooms[roomCode].promptList.prompts[promptId].answer1Votes) {
+        gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Loser!";
+        gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Winner!";
+      } else {
+        gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Tie!";
+        gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Tie!";
+      }
 
       io.sockets.in(roomCode).emit('game progress update', { 
         players: gameRooms[roomCode].playerList.prepareToSend(),
@@ -520,7 +532,7 @@ io.on('connection', function(socket){
           gameRound: gameRooms[roomCode].currentRound,
         });}, 5000);
 
-    }, 35000);
+    }, 25000);
 
     if (playerID === 0) {
       console.log("this person probably timed out");
