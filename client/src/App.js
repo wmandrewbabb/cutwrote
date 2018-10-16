@@ -326,9 +326,9 @@ class App extends Component {
         //We're going to test if this is one of the prompts you filled out, if so you're flagged as not being able to vote
         if(this.state.prompts[this.state.currentPromptPos].player1ID === socket.id || this.state.prompts[this.state.currentPromptPos].player2ID === socket.id) {
           console.log("Sorry! You can't vote on this one!");
-          this.setState({
-            canVote: false,
-          });
+          
+          this.voteFor(this.state.prompts[this.state.currentPromptPos].id, 0);
+
         } 
       } else {
 
@@ -550,6 +550,8 @@ class App extends Component {
 
   voteFor(promptId, playerID) {
 
+    console.log(`You're voting for player ${playerID}`);
+
     if(this.state.canVote === true) {
       this.setState({
         hasVoted: true,
@@ -571,6 +573,7 @@ class App extends Component {
     } else {
       console.log("You've already voted/can't vote. This may be a result of of the timer ending without everyone voting.");
     }
+
   };
 
     // sortByKey(array, key) {

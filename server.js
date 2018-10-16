@@ -571,10 +571,10 @@ io.on('connection', function(socket){
       {
         checkPlayers++;
       }
-      // if(gameRooms[roomCode].playerList.players[iv].id === gameRooms[roomCode].promptList.prompts[promptId].player1ID || gameRooms[roomCode].playerList.players[iv].id === gameRooms[roomCode].promptList.prompts[promptId].player2ID) 
-      // {
-      //   checkPlayers++;
-      // }
+      if(gameRooms[roomCode].playerList.players[iv].id === gameRooms[roomCode].promptList.prompts[promptId].player1ID || gameRooms[roomCode].playerList.players[iv].id === gameRooms[roomCode].promptList.prompts[promptId].player2ID) 
+      {
+        checkPlayers++;
+      }
     
       iterator++;
     }
