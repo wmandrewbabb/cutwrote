@@ -388,6 +388,7 @@ io.on('connection', function(socket){
   socket.on('takingSeat', (data) => {
     console.log("Getting a request to take seat from " + data.name + " in room " + data.roomCode);
     let name = data.name;
+    if(name === "") {name = "A JERK";}
     let roomCode = data.roomCode;
 
     const { playerList } = gameRooms[roomCode];
