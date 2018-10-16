@@ -16,7 +16,7 @@ const VotingRound = (props) => (
         </div>
         <div className="row w-100 justify-content-center align-items-center">
             <Timer
-                secondsRemaining={30}
+                secondsRemaining={15}
                 onCompletion={() => props.voteFor(props.id, 0)}
             />
         </div>
