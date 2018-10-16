@@ -483,7 +483,7 @@ io.on('connection', function(socket){
         });
 
         gameRooms[roomCode].currentScreen = "votingRounds";
-        clearInterval(gameRooms[roomCode].setTimeout);
+        clearTimeout(gameRooms[roomCode].setTimeout);
 
     } else {
       console.log("waiting on someone still");
@@ -491,6 +491,11 @@ io.on('connection', function(socket){
 
 
   });
+
+  //
+  //socket.on("votesStarting", (data) => {
+
+  //})
 
   //How we manage votes in these parts
 
@@ -500,6 +505,22 @@ io.on('connection', function(socket){
     let playerID = data.playerID;
     let roomCode = data.roomCode;
     let voterID = data.voterID;
+
+    gameRooms[roomCode].voteCatcher = setTimeout( ()=> {
+
+      console.log("the room has timed out");
+
+      io.sockets.in(roomCode).emit('game progress update', { 
+        players: gameRooms[roomCode].playerList.prepareToSend(),
+        prompts: gameRooms[roomCode].promptList.preparePrompts(),
+        gameRound: gameRooms[roomCode].currentRound,
+      });
+
+        gameRooms[roomCode].voteTimeout = setTimeout(() => {io.sockets.in(roomCode).emit('start voting', {
+          gameRound: gameRooms[roomCode].currentRound,
+        });}, 5000);
+
+    }, 35000);
 
     if (playerID === 0) {
       console.log("this person probably timed out");
@@ -544,6 +565,7 @@ io.on('connection', function(socket){
     if(gameRooms[roomCode].playerList.length === checkPlayers) {
       console.log("everyone's ready");
 
+        clearTimeout(gameRooms[roomCode].voteCatcher);
         gameRooms[roomCode].currentRound++;
 
         // XXWinner's toast here
@@ -560,7 +582,7 @@ io.on('connection', function(socket){
         }
 
         io.sockets.in(roomCode).emit('game progress update', { 
-          players: gameRooms[roomCode].playerList.timeOut(),
+          players: gameRooms[roomCode].playerList.prepareToSend(),
           prompts: gameRooms[roomCode].promptList.preparePrompts(),
           gameRound: gameRooms[roomCode].currentRound,
         });
@@ -569,53 +591,13 @@ io.on('connection', function(socket){
           gameRound: gameRooms[roomCode].currentRound,
         });}, 5000);
 
-        // if (gameRooms[roomCode].voteCatcher) {clearInterval(gameRooms[roomCode].voteCatcher);};
-
-        // gameRooms[roomCode].voteCatcher = setTimeout(() => {
-
-        //     gameRooms[roomCode].currentRound++;
-
-        //       // XXWinner's toast here
-
-        //       if(gameRooms[roomCode].promptList.prompts[promptId].answer1Votes > gameRooms[roomCode].promptList.prompts[promptId].answer2Votes) {
-        //         gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Winner!";
-        //         gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Loser!";
-        //       } else if (gameRooms[roomCode].promptList.prompts[promptId].answer2Votes > gameRooms[roomCode].promptList.prompts[promptId].answer1Votes) {
-        //         gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Loser!";
-        //         gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Winner!";
-        //       } else {
-        //         gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Tie!";
-        //         gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Tie!";
-        //       }
-
-        //       io.sockets.in(roomCode).emit('game progress update', { 
-        //         players: gameRooms[roomCode].playerList.timeOut(),
-        //         prompts: gameRooms[roomCode].promptList.preparePrompts(),
-        //         gameRound: gameRooms[roomCode].currentRound,
-        //       });
-
-        //       gameRooms[roomCode].voteTimeout = setTimeout(() => {io.sockets.in(roomCode).emit('start voting', {
-        //         gameRound: gameRooms[roomCode].currentRound,
-        //       });}, 5000);
-
-        //       if(gameRooms[roomCode].voteCatcher) {clearInterval(gameRooms[roomCode].voteCatcher);};
-
-        //       gameRooms[roomCode].currentScreen = "votingRounds";
-
-        //       for(let id in gameRooms[roomCode].playerList.players){
-        //         console.log(`resetting ${id}'s votes`);
-        //         gameRooms[roomCode].playerList.players[id].voted=false;
-        //       }
-
-        // }, 35000);
-
         gameRooms[roomCode].currentScreen = "votingRounds";
 
         for(let id in gameRooms[roomCode].playerList.players){
           console.log(`resetting ${id}'s votes`);
           gameRooms[roomCode].playerList.players[id].voted=false;
         }
-        // clearInterval(gameRooms[roomCode].setTimeout);
+        clearTimeout(gameRooms[roomCode].setTimeout);
 
     } else {
       console.log("waiting on someone still");
@@ -637,7 +619,6 @@ io.on('connection', function(socket){
     let roomCode = data.roomCode;
 
     gameRooms[roomCode].currentScreen = "firstTransition";
-
 
     //This is a failsafe in case someone does something dumb like tabs out and the tab goes inactive and never returns anything
     gameRooms[roomCode].setTimeout = setTimeout( ()=> {
