@@ -423,6 +423,7 @@ io.on('connection', function(socket){
       players: gameRooms[roomCode].playerList.prepareToSend(), 
       prompts: gameRooms[roomCode].promptList.preparePrompts(),
       gameRound: gameRooms[roomCode].currentRound,
+      status: "first prompt sent",
     });
 
   });
@@ -449,6 +450,7 @@ io.on('connection', function(socket){
       players: gameRooms[roomCode].playerList.prepareToSend(), 
       prompts: gameRooms[roomCode].promptList.preparePrompts(),
       gameRound: gameRooms[roomCode].currentRound,
+      status: 'second prompt sent',
     });
 
     // gameRooms[roomCode].playerList.players[socket.id].ready = true;
@@ -506,33 +508,36 @@ io.on('connection', function(socket){
     let roomCode = data.roomCode;
     let voterID = data.voterID;
 
-    gameRooms[roomCode].voteCatcher = setTimeout( ()=> {
+    if(!gameRooms[roomCode].voteCatcher){
+      gameRooms[roomCode].voteCatcher = setTimeout( ()=> {
 
-      console.log("the room has timed out");
-      gameRooms[roomCode].currentRound++;
+        console.log("the room has timed out");
+        gameRooms[roomCode].currentRound++;
 
-      if(gameRooms[roomCode].promptList.prompts[promptId].answer1Votes > gameRooms[roomCode].promptList.prompts[promptId].answer2Votes) {
-        gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Winner!";
-        gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Loser!";
-      } else if (gameRooms[roomCode].promptList.prompts[promptId].answer2Votes > gameRooms[roomCode].promptList.prompts[promptId].answer1Votes) {
-        gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Loser!";
-        gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Winner!";
-      } else {
-        gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Tie!";
-        gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Tie!";
-      }
+        if(gameRooms[roomCode].promptList.prompts[promptId].answer1Votes > gameRooms[roomCode].promptList.prompts[promptId].answer2Votes) {
+          gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Winner!";
+          gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Loser!";
+        } else if (gameRooms[roomCode].promptList.prompts[promptId].answer2Votes > gameRooms[roomCode].promptList.prompts[promptId].answer1Votes) {
+          gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Loser!";
+          gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Winner!";
+        } else {
+          gameRooms[roomCode].promptList.prompts[promptId].player1Status = "Tie!";
+          gameRooms[roomCode].promptList.prompts[promptId].player2Status = "Tie!";
+        }
 
-      io.sockets.in(roomCode).emit('game progress update', { 
-        players: gameRooms[roomCode].playerList.prepareToSend(),
-        prompts: gameRooms[roomCode].promptList.preparePrompts(),
-        gameRound: gameRooms[roomCode].currentRound,
-      });
-
-        gameRooms[roomCode].voteTimeout = setTimeout(() => {io.sockets.in(roomCode).emit('start voting', {
+        io.sockets.in(roomCode).emit('game progress update', { 
+          players: gameRooms[roomCode].playerList.prepareToSend(),
+          prompts: gameRooms[roomCode].promptList.preparePrompts(),
           gameRound: gameRooms[roomCode].currentRound,
-        });}, 5000);
+          status: "From the timeout",
+        });
 
-    }, 25000);
+          gameRooms[roomCode].voteTimeout = setTimeout(() => {io.sockets.in(roomCode).emit('start voting', {
+            gameRound: gameRooms[roomCode].currentRound,
+          });}, 5000);
+
+      }, 25000);
+    }
 
     if (playerID === 0) {
       console.log("this person probably timed out or is one of the prompt-providers");
@@ -597,6 +602,7 @@ io.on('connection', function(socket){
           players: gameRooms[roomCode].playerList.prepareToSend(),
           prompts: gameRooms[roomCode].promptList.preparePrompts(),
           gameRound: gameRooms[roomCode].currentRound,
+          status: "final vote",
         });
 
         gameRooms[roomCode].voteTimeout = setTimeout(() => {io.sockets.in(roomCode).emit('start voting', {
@@ -621,6 +627,7 @@ io.on('connection', function(socket){
       players: gameRooms[roomCode].playerList.timeOut(),
       prompts: gameRooms[roomCode].promptList.preparePrompts(),
       gameRound: gameRooms[roomCode].currentRound,
+      status: "waiting on votes",
     });
 
 
@@ -641,6 +648,7 @@ io.on('connection', function(socket){
         players: gameRooms[roomCode].playerList.timeOut(),
         prompts: gameRooms[roomCode].promptList.preparePrompts(),
         gameRound: gameRooms[roomCode].currentRound,
+        status: "game starting",
       });
 
         io.sockets.in(roomCode).emit('start voting', {

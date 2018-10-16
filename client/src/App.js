@@ -200,7 +200,8 @@ class App extends Component {
       });
       console.log(data.players);
       console.log(data.prompts);
-      console.log(`game round: ${data.gameRound}`)
+      console.log(`game round: ${data.gameRound}`);
+      console.log(`server status: ${data.status}`);
     });
 
     socket.on('room created', (data) => {
@@ -271,14 +272,14 @@ class App extends Component {
       console.log(`stupid prompt error: ${this.state.prompts[this.state.currentPromptPos].prompt}`);
       
       if (currentScreenFromServer === "votingRounds") {
+        
+        this.voteFor(this.state.prompts[this.state.currentPromptPos].id, 0);
 
         // let newScreen = 'votingTransition';
         this.setState({
-          canVote: false,
           currentScreen: "voting",
         });
 
-        this.voteFor(this.state.prompts[this.state.currentPromptPos].id, 0);
 
         console.log("You'll be able to vote next time!");
 
@@ -548,25 +549,28 @@ class App extends Component {
   };
 
   voteFor(promptId, playerID) {
-    this.setState({
-      hasVoted: true,
-      canVote: false,
-    });
 
-    let voteWorth = 1;
-
-    if(this.state.playing === false)
-    { voteWorth = .1}
-
-    socket.emit("sendVote", {
-      promptId: promptId,
-      voteWorth: voteWorth,
-      playerID: playerID,
-      roomCode: this.state.roomCode,
-      voterID: socket.id, 
-    });
-    
-
+    if(this.state.canVote === true) {
+      this.setState({
+        hasVoted: true,
+        canVote: false,
+      });
+  
+      let voteWorth = 1;
+  
+      if(this.state.playing === false)
+      { voteWorth = .1}
+  
+      socket.emit("sendVote", {
+        promptId: promptId,
+        voteWorth: voteWorth,
+        playerID: playerID,
+        roomCode: this.state.roomCode,
+        voterID: socket.id, 
+      });
+    } else {
+      console.log("You've already voted/can't vote. This may be a result of of the timer ending without everyone voting.");
+    }
   };
 
     // sortByKey(array, key) {
