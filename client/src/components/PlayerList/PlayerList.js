@@ -20,7 +20,7 @@ export const PlayerList = props => {
                             <img src={x.playerPicture} alt={x.name}></img>
                             <p className="nameText">{x.name}</p>
                             {props.currentScreen === 'winner' && 
-                            <div className="scoreList bounceIn">{x.score}</div>}
+                            <div className="scoreList bounceIn">{x.score.toFixed(1)}</div>}
                          </div>
                          </ListItem>  
                   )

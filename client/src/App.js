@@ -326,7 +326,7 @@ class App extends Component {
         //We're going to test if this is one of the prompts you filled out, if so you're flagged as not being able to vote
         if(this.state.prompts[this.state.currentPromptPos].player1ID === socket.id || this.state.prompts[this.state.currentPromptPos].player2ID === socket.id) {
           console.log("Sorry! You can't vote on this one!");
-          
+
           this.voteFor(this.state.prompts[this.state.currentPromptPos].id, 0);
 
         } 
@@ -561,7 +561,7 @@ class App extends Component {
       let voteWorth = 1;
   
       if(this.state.playing === false)
-      { voteWorth = .1}
+      {voteWorth = 0.1}
   
       socket.emit("sendVote", {
         promptId: promptId,

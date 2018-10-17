@@ -17,26 +17,26 @@ function Tie(props) {
                             <div className="col-md-6 d-flex justify-content-center align-items-center">
                                 <div className="row w-100 justify-content-center align-items-center">
                                     <div className="col-12 d-flex justify-content-center">
-                                        <img className="bounceIn winnerPic" src={props.players[0].playerPicture} />
+                                        <img alt="" className="bounceIn winnerPic" src={props.players[0].playerPicture} />
                                     </div>
                                     <div className="col-12">
                                         <h2 className="winnerName">{props.players[0].name}</h2>
                                     </div>
                                     <div className="col-12">
-                                        <h2 className="winnerScore">{props.players[0].score}</h2>
+                                        <h2 className="winnerScore">{props.players[0].score.toFixed(1)}</h2>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-md-6 d-flex justify-content-center align-items-center">
                             <div className="row w-100 justify-content-center align-items-center">
                                     <div className="col-12 d-flex justify-content-center">
-                                        <img className="bounceIn winnerPic" src={props.players[1].playerPicture} />
+                                        <img alt="" className="bounceIn winnerPic" src={props.players[1].playerPicture} />
                                     </div>
                                     <div className="col-12">
                                         <h2 className="winnerName">{props.players[1].name}</h2>
                                     </div>
                                     <div className="col-12">
-                                        <h2 className="winnerScore">{props.players[1].score}</h2>
+                                        <h2 className="winnerScore">{props.players[1].score.toFixed(1)}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -56,13 +56,13 @@ function Win(props) {
             <div className="col-md-12 d-flex justify-content-center align-items-center">
                 <div className="row w-100 justify-content-center align-items-center">
                     <div className="col-12 d-flex justify-content-center">
-                        <img className="bounceIn winnerPic" src={props.players[0].playerPicture} />
+                        <img alt="" className="bounceIn winnerPic" src={props.players[0].playerPicture} />
                     </div>
                     <div className="col-12">
                         <h2 className="winnerName">{props.players[0].name}</h2>
                     </div>
                     <div className="col-12">
-                        <h2 className="winnerScore">{props.players[0].score}</h2>
+                        <h2 className="winnerScore">{props.players[0].score.toFixed(1)}</h2>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@ class ScoreScreen extends Component {
 
     return(
         <div className="container d-flex">
-            {this.props.players[0].score === this.props.players[1].score ? (<Tie players={this.props.players}/>) : (<Win players={this.props.players}/>)}
+            {this.props.players[0].score.toFixed(1) === this.props.players[1].score.toFixed(1) ? (<Tie players={this.props.players}/>) : (<Win players={this.props.players}/>)}
         </div>
 
     );

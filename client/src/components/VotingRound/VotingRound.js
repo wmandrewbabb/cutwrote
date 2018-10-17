@@ -26,7 +26,7 @@ const VotingRound = (props) => (
                         <div className="row w-100">
                             <span className="ml-auto voteText leftVote">Votes:{props.answer1Votes}</span>
                             <div className="playerFaceDivLeft">
-                                {props.player1Status != "" &&
+                                {props.player1Status !== "" &&
                                     <p className="statusTextLeft bounceIn">{props.player1Status}</p>
                                 }
                                 <img src={props.player1Pic} alt={props.player1name}></img>
@@ -40,7 +40,7 @@ const VotingRound = (props) => (
                         <div className="row w-100">
                             <span className="mr-auto voteText spaceLeft">Votes:{props.answer2Votes}</span>
                             <div className="playerFaceDivRight">
-                                {props.player2Status != "" &&
+                                {props.player2Status !== "" &&
                                     <p className="statusTextRight bounceIn">{props.player2Status}</p>
                                 }                                <img src={props.player2Pic} alt={props.player2Name}></img>
                                 <p className="nameText">{props.player2Name}</p>
@@ -55,7 +55,7 @@ const VotingRound = (props) => (
                         <div className="row w-100">
                             <span className="ml-auto voteText leftVote">Votes:{props.answer1Votes}</span>
                             <div className="playerFaceDivLeft">
-                            {props.player1Status != "" &&
+                            {props.player1Status !== "" &&
                                     <p className="statusTextLeft bounceIn">{props.player1Status}</p>
                             }
                             <p className="statusTextLeft bounceIn">{props.player1Status}</p>
@@ -69,7 +69,7 @@ const VotingRound = (props) => (
                         <div className="row w-100">
                             <span className="mr-auto voteText spaceLeft">Votes:{props.answer2Votes}</span>
                             <div className="playerFaceDivRight">
-                                {props.player2Status != "" &&
+                                {props.player2Status !== "" &&
                                     <p className="statusTextRight bounceIn">{props.player2Status}</p>
                                 }
                                 <img src={props.player2Pic} alt={props.player2Name}></img>
