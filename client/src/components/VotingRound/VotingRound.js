@@ -24,7 +24,7 @@ const VotingRound = (props) => (
             <div className="col-sm-6">
                     <button className="speechBubbleLeft justify-content-center align-items-center" onClick={() => props.voteFor(props.id, props.player1ID)}>{props.answer1}</button>
                         <div className="row w-100">
-                            <span className="ml-auto voteText leftVote">Votes:{props.answer1Votes}</span>
+                            <span className="ml-auto voteText leftVote">Votes:{props.answer1Votes.toFixed(1)}</span>
                             <div className="playerFaceDivLeft">
                                 {props.player1Status !== "" &&
                                     <p className="statusTextLeft bounceIn">{props.player1Status}</p>
@@ -38,7 +38,7 @@ const VotingRound = (props) => (
             <div className="col-sm-6">
                     <button className="speechBubbleRight justify-content-center align-items-end" onClick={() => props.voteFor(props.id, props.player2ID)}>{props.answer2}</button>
                         <div className="row w-100">
-                            <span className="mr-auto voteText spaceLeft">Votes:{props.answer2Votes}</span>
+                            <span className="mr-auto voteText spaceLeft">Votes:{props.answer2Votes.toFixed(1)}</span>
                             <div className="playerFaceDivRight">
                                 {props.player2Status !== "" &&
                                     <p className="statusTextRight bounceIn">{props.player2Status}</p>
@@ -53,7 +53,7 @@ const VotingRound = (props) => (
                 <div className="col-sm-6">
                 <div className="speechBubbleLeftCantVote justify-content-center align-items-center">{props.answer1}</div>
                         <div className="row w-100">
-                            <span className="ml-auto voteText leftVote">Votes:{props.answer1Votes}</span>
+                            <span className="ml-auto voteText leftVote">Votes:{props.answer1Votes.toFixed(1)}</span>
                             <div className="playerFaceDivLeft">
                             {props.player1Status !== "" &&
                                     <p className="statusTextLeft bounceIn">{props.player1Status}</p>
@@ -67,7 +67,7 @@ const VotingRound = (props) => (
                 <div className="col-sm-6">
                 <div className="speechBubbleRightCantVote justify-content-center align-items-end">{props.answer2}</div>
                         <div className="row w-100">
-                            <span className="mr-auto voteText spaceLeft">Votes:{props.answer2Votes}</span>
+                            <span className="mr-auto voteText spaceLeft">Votes:{props.answer2Votes.toFixed(1)}</span>
                             <div className="playerFaceDivRight">
                                 {props.player2Status !== "" &&
                                     <p className="statusTextRight bounceIn">{props.player2Status}</p>
